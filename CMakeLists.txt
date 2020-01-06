@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.2)
 
 if(DEFINED ENV{TRAVIS_BUILD_NUMBER})
     project(helloworld VERSION 0.0.$ENV{TRAVIS_BUILD_NUMBER})
+    # for travis-ci
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 else()
     project(helloworld VERSION 0.0.1)
 endif()
@@ -13,8 +15,6 @@ find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 add_executable(helloworld_cli main.cpp)
 add_library(helloworld lib.cpp)
 add_executable(tests tests.cpp)
-
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
 set_target_properties(helloworld_cli helloworld tests PROPERTIES
     CXX_STANDARD 17
