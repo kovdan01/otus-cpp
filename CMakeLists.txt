@@ -32,7 +32,7 @@ target_link_libraries(helloworld_cli PRIVATE helloworld)
 target_link_libraries(tests ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} helloworld)
 
 
-if (MSVC)
+if(MSVC)
     target_compile_options(helloworld_cli PRIVATE
         /W4
     )
@@ -42,15 +42,15 @@ if (MSVC)
     target_compile_options(tests PRIVATE
         /W4
     )
-else ()
+else()
     target_compile_options(helloworld_cli PRIVATE
-        -Werror -Wall -Wimplicit-fallthrough -pedantic-errors
+        -Werror -Wall -pedantic-errors
     )
     target_compile_options(helloworld PRIVATE
-        -Werror -Wall -Wimplicit-fallthrough -pedantic-errors
+        -Werror -Wall -pedantic-errors
     )
     target_compile_options(tests PRIVATE
-        -Werror -Wall -Wimplicit-fallthrough -pedantic-errors
+        -Werror -Wall -pedantic-errors
     )
 endif()
 
