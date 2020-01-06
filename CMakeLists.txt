@@ -3,8 +3,6 @@ cmake_minimum_required(VERSION 3.2)
 
 if(DEFINED ENV{TRAVIS_BUILD_NUMBER})
     project(helloworld VERSION 0.0.$ENV{TRAVIS_BUILD_NUMBER})
-    # for travis-ci
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 else()
     project(helloworld VERSION 0.0.1)
 endif()
@@ -46,13 +44,13 @@ if(MSVC)
     )
 else()
     target_compile_options(helloworld_cli PRIVATE
-        -Werror -Wall -pedantic-errors
+        -Werror -Wall -Wimplicit-fallthrough -pedantic-errors
     )
     target_compile_options(helloworld PRIVATE
-        -Werror -Wall -pedantic-errors
+        -Werror -Wall -Wimplicit-fallthrough -pedantic-errors
     )
     target_compile_options(tests PRIVATE
-        -Werror -Wall -pedantic-errors
+        -Werror -Wall -Wimplicit-fallthrough -pedantic-errors
     )
 endif()
 
