@@ -4,6 +4,11 @@ before_script:
 - sudo apt-get install libgtest-dev -y
 - echo "deb http://archive.ubuntu.com/ubuntu xenial main universe" | sudo tee -a /etc/apt/sources.list
 - sudo apt-get update -qq
+- cd /usr/src/gtest
+- sudo cmake CMakeLists.txt
+- sudo make
+- sudo cp *.a /usr/lib
+- cd -
 script:
 - cmake .
 - cmake --build .
