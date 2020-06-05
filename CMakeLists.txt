@@ -8,10 +8,13 @@ else()
 endif()
 
 configure_file(version.h.in version.h)
+find_package(GTest REQUIRED)
 
-add_executable(02-ip_filter main.cpp)
+add_library(utils utils.cpp utils.h)
+add_executable(02-ip_filter main.cpp filter.h ip.h)
+add_executable(tests tests.cpp input.h filter.h ip.h)
 
-set_target_properties(02-ip_filter PROPERTIES
+set_target_properties(02-ip_filter tests PROPERTIES
     CXX_STANDARD 17
     CXX_STANDARD_REQUIRED ON
     CXX_EXTENSIONS OFF
@@ -19,14 +22,29 @@ set_target_properties(02-ip_filter PROPERTIES
 
 # add version.h
 target_include_directories(02-ip_filter PRIVATE "${CMAKE_BINARY_DIR}")
+target_link_libraries(02-ip_filter PRIVATE utils)
 
+target_include_directories(tests PRIVATE ${GTest_INCLUDE_DIR})
+target_link_libraries(tests PRIVATE gtest utils)
 
 if(MSVC)
     target_compile_options(02-ip_filter PRIVATE
         /W4
     )
+    target_compile_options(tests PRIVATE
+        /W4
+    )
+    target_compile_options(utils PRIVATE
+        /W4
+    )
 else()
     target_compile_options(02-ip_filter PRIVATE
+        -Werror -Wall -Wimplicit-fallthrough -pedantic-errors
+    )
+    target_compile_options(tests PRIVATE
+        -Werror -Wall -Wimplicit-fallthrough -pedantic-errors
+    )
+    target_compile_options(utils PRIVATE
         -Werror -Wall -Wimplicit-fallthrough -pedantic-errors
     )
 endif()
