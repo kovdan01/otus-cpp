@@ -1,10 +1,10 @@
-#include <cassert>
-#include <cstdlib>
 #include <iostream>
 #include <string>
 #include <vector>
 #include <algorithm>
 #include <stdexcept>
+#include <functional>
+#include <cstdint>
 
 struct ip_t
 {
@@ -103,23 +103,17 @@ int main(int argc, char const* argv[])
 
         print_pool(ip_pool, [](const ip_t& ip)
         {
-            if (ip._0 == 1)
-                return true;
-            return false;
+            return (ip._0 == 1);
         });
 
         print_pool(ip_pool, [](const ip_t& ip)
         {
-            if (ip._0 == 46 && ip._1 == 70)
-                return true;
-            return false;
+            return (ip._0 == 46 && ip._1 == 70);
         });
 
         print_pool(ip_pool, [](const ip_t& ip)
         {
-            if (ip._0 == 46 || ip._1 == 46 || ip._2 == 46 || ip._3 == 46)
-                return true;
-            return false;
+            return (ip._0 == 46 || ip._1 == 46 || ip._2 == 46 || ip._3 == 46);
         });
     }
     catch (const std::exception& e)
