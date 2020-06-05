@@ -25,7 +25,7 @@ target_include_directories(02-ip_filter PRIVATE "${CMAKE_BINARY_DIR}")
 target_link_libraries(02-ip_filter PRIVATE utils)
 
 target_include_directories(tests PRIVATE ${GTest_INCLUDE_DIR})
-target_link_libraries(tests PRIVATE gtest utils)
+target_link_libraries(tests PRIVATE pthread gtest utils)
 
 if(MSVC)
     target_compile_options(02-ip_filter PRIVATE
