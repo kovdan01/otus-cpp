@@ -12,7 +12,7 @@ configure_file(version.h.in version.h)
 add_executable(ip_filter main.cpp)
 
 set_target_properties(ip_filter PROPERTIES
-    CXX_STANDARD 20
+    CXX_STANDARD 17
     CXX_STANDARD_REQUIRED ON
     CXX_EXTENSIONS OFF
 )

@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <functional>
 #include <cstdint>
+#include <utility>
 
 struct ip_t
 {
@@ -67,18 +68,79 @@ ip_t splitted_to_ip(const std::vector<std::string>& splitted)
     };
 }
 
-void print_pool(const ip_pool_t& ip_pool,
-                std::function<bool(const ip_t& ip)> predicate = [](const ip_t&){ return true; })
+template <typename T>
+class Filter
+{
+public:
+    Filter(const std::vector<T>& pool,
+           std::function<bool(const T&)> predicate)
+        : m_pool(pool)
+        , m_predicate(std::move(predicate))
+    {
+    }
+
+    class Iterator
+    {
+    public:
+        Iterator(typename std::vector<T>::const_iterator it, const Filter* filter)
+            : m_it(it)
+            , m_filter(filter)
+        {
+            while (m_it != m_filter->m_pool.cend() && !m_filter->m_predicate(*m_it))
+            {
+                ++m_it;
+            }
+        }
+
+        Iterator& operator++()
+        {
+            ++m_it;
+            while (m_it != m_filter->m_pool.cend() && !m_filter->m_predicate(*m_it))
+            {
+                ++m_it;
+            }
+            return *this;
+        }
+
+        const T& operator*() const
+        {
+            return *m_it;
+        }
+
+        bool operator!=(const Iterator& other)
+        {
+            return m_it != other.m_it;
+        }
+
+    private:
+        typename std::vector<T>::const_iterator m_it;
+        const Filter* m_filter;
+    };
+
+    Iterator begin() const
+    {
+        return Iterator{m_pool.cbegin(), this};
+    }
+
+    Iterator end() const
+    {
+        return Iterator{m_pool.cend(), this};
+    }
+
+private:
+    const std::vector<T>& m_pool;
+    std::function<bool(const T&)> m_predicate;
+};
+
+template <typename IpPool>
+void print_pool(const IpPool& ip_pool)
 {
     for (const ip_t& ip : ip_pool)
     {
-        if (predicate(ip))
-        {
-            std::cout << static_cast<int>(ip._0) << '.'
-                      << static_cast<int>(ip._1) << '.'
-                      << static_cast<int>(ip._2) << '.'
-                      << static_cast<int>(ip._3) << '\n';
-        }
+        std::cout << static_cast<int>(ip._0) << '.'
+                  << static_cast<int>(ip._1) << '.'
+                  << static_cast<int>(ip._2) << '.'
+                  << static_cast<int>(ip._3) << '\n';
     }
 }
 
@@ -99,22 +161,25 @@ int main(int argc, char const* argv[])
             return std::tie(lhs._0, lhs._1, lhs._2, lhs._3) > std::tie(rhs._0, rhs._1, rhs._2, rhs._3);
         });
 
-        print_pool(ip_pool);
-
-        print_pool(ip_pool, [](const ip_t& ip)
+        Filter<ip_t> filter1(ip_pool, [](const ip_t& ip)
         {
             return (ip._0 == 1);
         });
 
-        print_pool(ip_pool, [](const ip_t& ip)
+        Filter<ip_t> filter46_70(ip_pool, [](const ip_t& ip)
         {
             return (ip._0 == 46 && ip._1 == 70);
         });
 
-        print_pool(ip_pool, [](const ip_t& ip)
+        Filter<ip_t> filter46_any(ip_pool, [](const ip_t& ip)
         {
             return (ip._0 == 46 || ip._1 == 46 || ip._2 == 46 || ip._3 == 46);
         });
+
+        print_pool(ip_pool);
+        print_pool(filter1);
+        print_pool(filter46_70);
+        print_pool(filter46_any);
     }
     catch (const std::exception& e)
     {
