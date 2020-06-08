@@ -8,7 +8,6 @@ else()
 endif()
 
 configure_file(version.h.in version.h)
-find_package(GTest REQUIRED)
 
 add_executable(03-allocator main.cpp allocator.h list.h)
 
