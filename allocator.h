@@ -84,7 +84,7 @@ public:
     void construct(U* p, Args&&... args)
     {
         new (p) U(std::forward<Args>(args)...);
-    };
+    }
 
     void destroy(T* p)
     {
