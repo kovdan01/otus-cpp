@@ -48,7 +48,7 @@ TEST_P(IpFilterParam, CheckFilter)
     });
 
     // test
-    my::Filter<my::ip_t> filter(ip_pool, predicate);
+    my::FilteredVectorAdaptor<my::ip_t> filter(ip_pool, predicate);
     std::vector<my::ip_t> filtered;
     for (const my::ip_t& ip : filter)
     {

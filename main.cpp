@@ -48,17 +48,17 @@ int main(int argc, char const* argv[])
             return std::tie(lhs._0, lhs._1, lhs._2, lhs._3) > std::tie(rhs._0, rhs._1, rhs._2, rhs._3);
         });
 
-        my::Filter<my::ip_t> filter1(ip_pool, [](const my::ip_t& ip)
+        my::FilteredVectorAdaptor<my::ip_t> filter1(ip_pool, [](const my::ip_t& ip)
         {
             return (ip._0 == 1);
         });
 
-        my::Filter<my::ip_t> filter46_70(ip_pool, [](const my::ip_t& ip)
+        my::FilteredVectorAdaptor<my::ip_t> filter46_70(ip_pool, [](const my::ip_t& ip)
         {
             return (ip._0 == 46 && ip._1 == 70);
         });
 
-        my::Filter<my::ip_t> filter46_any(ip_pool, [](const my::ip_t& ip)
+        my::FilteredVectorAdaptor<my::ip_t> filter46_any(ip_pool, [](const my::ip_t& ip)
         {
             return (ip._0 == 46 || ip._1 == 46 || ip._2 == 46 || ip._3 == 46);
         });

@@ -9,10 +9,10 @@ namespace my
 {
 
 template <typename T>
-class Filter
+class FilteredVectorAdaptor
 {
 public:
-    Filter(const std::vector<T>& pool,
+    FilteredVectorAdaptor(const std::vector<T>& pool,
            std::function<bool(const T&)> predicate)
         : m_pool(pool)
         , m_predicate(std::move(predicate))
@@ -21,8 +21,10 @@ public:
 
     class Iterator
     {
-    public:
-        Iterator(typename std::vector<T>::const_iterator it, const Filter* filter)
+    private:
+        friend class FilteredVectorAdaptor<T>;
+
+        Iterator(typename std::vector<T>::const_iterator it, const FilteredVectorAdaptor* filter)
             : m_it(it)
             , m_filter(filter)
         {
@@ -32,6 +34,7 @@ public:
             }
         }
 
+    public:
         Iterator& operator++()
         {
             ++m_it;
@@ -54,17 +57,17 @@ public:
 
     private:
         typename std::vector<T>::const_iterator m_it;
-        const Filter* m_filter;
+        const FilteredVectorAdaptor* m_filter;
     };
 
-    Iterator begin() const
+    [[nodiscard]] Iterator begin() const
     {
-        return Iterator{m_pool.cbegin(), this};
+        return Iterator{ m_pool.cbegin(), this };
     }
 
-    Iterator end() const
+    [[nodiscard]] Iterator end() const
     {
-        return Iterator{m_pool.cend(), this};
+        return Iterator{ m_pool.cend(), this };
     }
 
 private:
