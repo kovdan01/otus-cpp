@@ -1,0 +1,59 @@
+cmake_minimum_required(VERSION 3.2)
+
+
+if(DEFINED ENV{TRAVIS_BUILD_NUMBER})
+    project(04-print_ip VERSION 0.0.$ENV{TRAVIS_BUILD_NUMBER})
+else()
+    project(04-print_ip VERSION 0.0.1)
+endif()
+
+configure_file(version.h.in version.h)
+find_package(GTest REQUIRED)
+
+add_executable(04-print_ip main.cpp print_ip.h)
+add_executable(tests tests.cpp print_ip.h)
+
+set_target_properties(04-print_ip tests PROPERTIES
+    CXX_STANDARD 17
+    CXX_STANDARD_REQUIRED ON
+    CXX_EXTENSIONS OFF
+)
+
+# add version.h
+target_include_directories(04-print_ip PRIVATE "${CMAKE_BINARY_DIR}")
+
+target_include_directories(tests PRIVATE ${GTest_INCLUDE_DIR})
+target_link_libraries(tests PRIVATE pthread gtest)
+
+if(MSVC)
+    target_compile_options(04-print_ip PRIVATE
+        /W4
+    )
+    target_compile_options(tests PRIVATE
+        /W4
+    )
+else()
+    target_compile_options(04-print_ip PRIVATE
+        -Werror -Wall -Wimplicit-fallthrough -pedantic-errors
+    )
+    target_compile_options(tests PRIVATE
+        -Werror -Wall -Wimplicit-fallthrough -pedantic-errors
+    )
+endif()
+
+
+install(TARGETS 04-print_ip RUNTIME DESTINATION bin)
+
+set(CPACK_GENERATOR DEB)
+
+set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
+set(CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
+set(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
+
+set(CPACK_PACKAGE_CONTACT example@example.com)
+
+include(CPack)
+
+
+enable_testing()
+add_test(tests tests)
