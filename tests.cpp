@@ -26,7 +26,7 @@ TEST(PrintIp, Integer)
               "0.0\n"
               "127.0.0.1\n"
               "123.45.67.89.101.112.131.41\n", output);
-};
+}
 
 TEST(PrintIp, Vector)
 {
@@ -46,7 +46,7 @@ TEST(PrintIp, Vector)
               "1.2.3.4\n"
               "1\n"
               "\n", output);
-};
+}
 
 TEST(PrintIp, List)
 {
@@ -66,7 +66,7 @@ TEST(PrintIp, List)
               "1.2.3.4\n"
               "1\n"
               "\n", output);
-};
+}
 
 TEST(PrintIp, String)
 {
@@ -77,7 +77,7 @@ TEST(PrintIp, String)
 
     std::string output = testing::internal::GetCapturedStdout();
     EXPECT_EQ("trololo\n", output);
-};
+}
 
 TEST(PrintIp, Tuple)
 {
@@ -97,7 +97,7 @@ TEST(PrintIp, Tuple)
               "1.2.3.4\n"
               "1\n"
               "\n", output);
-};
+}
 
 int main(int argc, char* argv[])
 {
