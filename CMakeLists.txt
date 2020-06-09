@@ -23,7 +23,7 @@ set_target_properties(04-print_ip tests PROPERTIES
 target_include_directories(04-print_ip PRIVATE "${CMAKE_BINARY_DIR}")
 
 target_include_directories(tests PRIVATE ${GTest_INCLUDE_DIR})
-target_link_libraries(tests PRIVATE pthread gtest)
+target_link_libraries(tests PRIVATE gtest pthread)
 
 if(MSVC)
     target_compile_options(04-print_ip PRIVATE
