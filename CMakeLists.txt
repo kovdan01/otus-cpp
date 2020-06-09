@@ -10,8 +10,12 @@ endif()
 configure_file(version.h.in version.h)
 find_package(GTest REQUIRED)
 
-add_executable(04-print_ip main.cpp print_ip.h meta_functions.h)
-add_executable(tests tests.cpp print_ip.h meta_functions.h)
+set(HEADERS src/print_ip.h src/meta_functions.h)
+set(SOURCES src/main.cpp)
+set(TEST_SOURCES src/tests.cpp)
+
+add_executable(04-print_ip ${SOURCES} ${HEADERS})
+add_executable(tests ${TEST_SOURCES} ${HEADERS})
 
 set_target_properties(04-print_ip tests PROPERTIES
     CXX_STANDARD 17

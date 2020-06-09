@@ -1,3 +1,9 @@
+/**
+ * @file
+ * @brief Header file with implementation of template function `print_ip`
+ * @date June 2020
+*/
+
 #ifndef PRINT_IP_H
 #define PRINT_IP_H
 
