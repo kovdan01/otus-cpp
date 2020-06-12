@@ -19,6 +19,13 @@
 namespace my
 {
 
+/**
+ * Prints IP address
+ * @tparam Integer integer number type, representing IP
+ * @param[in] ip IP address to be printed
+ * the format is: byte_n.---.byte_2.byte_1, where `n = sizeof(Integer)`
+ * @param[in] stream output stream where to print IP address
+*/
 template <typename Integer,
           typename Fake = std::enable_if_t<std::is_integral_v<Integer>, void>>
 void print_ip(Integer ip, std::ostream& stream = std::cout)
@@ -45,6 +52,13 @@ void print_ip(Integer ip, std::ostream& stream = std::cout)
     }
 }
 
+/**
+ * Prints IP address
+ * @tparam Container type that satisfies Container C++ namedrequirement (except `std::string`)
+ * @param[in] ip IP address to be printed
+ * the format is: elem_1.elem_2.---.elem_n, where `n = ip.size()`
+ * @param[in] stream output stream where to print IP address
+*/
 template <typename Container,
           typename Fake = std::enable_if_t<meta::has_iterator_v<Container> && !meta::is_string_v<Container>, void>>
 void print_ip(const Container& ip, std::ostream& stream = std::cout)
@@ -57,6 +71,12 @@ void print_ip(const Container& ip, std::ostream& stream = std::cout)
     stream << *ip.rbegin();
 }
 
+/**
+ * Prints IP address
+ * @tparam String only `std::string` is supported
+ * @param[in] ip IP address to be printed
+ * @param[in] stream output stream where to print IP address
+*/
 template <typename String,
           typename Fake = std::enable_if_t<meta::is_string_v<String>, void>>
 void print_ip(const String& ip, std::ostream& stream = std::cout, Fake* /*placeholder*/ = nullptr)
@@ -83,6 +103,13 @@ void print_ip_tuple_helper(const std::tuple<Args...>& ip, std::ostream& stream =
 
 } // namespace detail
 
+/**
+ * Prints IP address
+ * @tparam Args... type pack with identical types
+ * @param[in] ip IP address to be printed
+ * the format is: elem_1.elem_2.---.elem_n, where n is tuple size
+ * @param[in] stream output stream where to print IP address
+*/
 template <typename... Args,
           typename Fake = std::enable_if_t<meta::check_tuple_v<Args...>, void>>
 void print_ip(const std::tuple<Args...>& ip, std::ostream& stream = std::cout)
