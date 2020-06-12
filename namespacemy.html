@@ -118,6 +118,19 @@ template&lt;typename Integer , typename Fake  = std::enable_if_t&lt;std::is_inte
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Prints IP address </p><dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Integer</td><td>integer number type, representing IP </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">ip</td><td>IP address to be printed the format is: byte_n.&mdash;.byte_2.byte_1, where <code>n = sizeof(Integer)</code> </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">stream</td><td>output stream where to print IP address </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -148,6 +161,19 @@ template&lt;typename Container , typename Fake  = std::enable_if_t&lt;meta::has_
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Prints IP address </p><dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Container</td><td>type that satisfies Container C++ namedrequirement (except <code>std::string</code>) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">ip</td><td>IP address to be printed the format is: elem_1.elem_2.&mdash;.elem_n, where <code>n = ip.size()</code> </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">stream</td><td>output stream where to print IP address </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -184,6 +210,19 @@ template&lt;typename String , typename Fake  = std::enable_if_t&lt;meta::is_stri
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Prints IP address </p><dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">String</td><td>only <code>std::string</code> is supported </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">ip</td><td>IP address to be printed </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">stream</td><td>output stream where to print IP address </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -214,6 +253,19 @@ template&lt;typename... Args, typename Fake  = std::enable_if_t&lt;meta::check_t
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Prints IP address </p><dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Args...</td><td>type pack with identical types </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">ip</td><td>IP address to be printed the format is: elem_1.elem_2.&mdash;.elem_n, where n is tuple size </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">stream</td><td>output stream where to print IP address </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
