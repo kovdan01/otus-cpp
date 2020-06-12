@@ -1,0 +1,7 @@
+<map id="my::IShape" name="my::IShape">
+<area shape="rect" id="node1" title="The IShape interface." alt="" coords="127,80,221,107"/>
+<area shape="rect" id="node3" href="$classmy_1_1Circle.html" title="The Circle class Represents a circle on a plane." alt="" coords="5,155,92,181"/>
+<area shape="rect" id="node4" href="$classmy_1_1Rectangle.html" title="The Rectangle class Represents a rectangle on a plane." alt="" coords="117,155,231,181"/>
+<area shape="rect" id="node5" href="$classmy_1_1Segment.html" title="The Segment class Represents a 2&#45;d segment." alt="" coords="256,155,364,181"/>
+<area shape="rect" id="node2" href="$classmy_1_1IRenderable.html" title=" " alt="" coords="110,5,238,32"/>
+</map>

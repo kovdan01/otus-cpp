@@ -1,0 +1,5 @@
+<map id="my::Segment" name="my::Segment">
+<area shape="rect" id="node1" title="The Segment class Represents a 2&#45;d segment." alt="" coords="15,155,123,181"/>
+<area shape="rect" id="node2" href="$classmy_1_1IShape.html" title="The IShape interface." alt="" coords="22,80,117,107"/>
+<area shape="rect" id="node3" href="$classmy_1_1IRenderable.html" title=" " alt="" coords="5,5,133,32"/>
+</map>
