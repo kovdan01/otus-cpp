@@ -23,36 +23,6 @@ void iterate(const my::Matrix<T, dimensions>& m)
     }
 }
 
-template <typename T, std::size_t dimensions>
-void fill(my::Matrix<T, dimensions>& m, const T& value)
-{
-    for (const auto& [index, elem] : m)
-    {
-        std::cout << index << ": " << elem << " --> " << value << std::endl;
-        elem = value;
-    }
-}
-
-void test()
-{
-    my::Matrix<int, 2> m(5);
-    m[1][1] = m[0][2] = 2;
-    m[0][2] = m[100][100] = m[1][1] = 5;
-    m[1][10] = 2;
-    m[2][2] = 10;
-    m.at({5, 10}) = 50;
-    m.at({1, 10}) = 5;
-
-    std::cout << "Size: " << m.size() << std::endl;
-    iterate(m);
-
-    m.shrink_to_fit();
-
-    std::cout << "Size: " << m.size() << std::endl;
-    iterate(m);
-}
-
-
 int main()
 {
     my::Matrix<int, 2> matrix(0);
@@ -71,9 +41,4 @@ int main()
 
     std::cout << "size = " << matrix.size() << std::endl;
     iterate(matrix);
-    std::cout << "size = " << matrix.size() << std::endl;
-    fill(matrix, 500);
-    std::cout << "size = " << matrix.size() << std::endl;
-    iterate(matrix);
-    std::cout << "size = " << matrix.size() << std::endl;
 }
