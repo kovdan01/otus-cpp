@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <array>
+#include <iomanip>
 
 template <std::size_t size>
 std::ostream& operator<<(std::ostream& stream, const std::array<std::size_t, size>& arr)
@@ -14,8 +15,22 @@ std::ostream& operator<<(std::ostream& stream, const std::array<std::size_t, siz
 template <typename T, std::size_t dimensions>
 void iterate(const my::Matrix<T, dimensions>& m)
 {
+    std::size_t i = 0;
     for (const auto& [index, elem] : m)
-        std::cout << index << ": " << elem << std::endl;
+    {
+        std::cout << std::setw(2) << i << ": " << index << ": " << elem << std::endl;
+        ++i;
+    }
+}
+
+template <typename T, std::size_t dimensions>
+void fill(my::Matrix<T, dimensions>& m, const T& value)
+{
+    for (const auto& [index, elem] : m)
+    {
+        std::cout << index << ": " << elem << " --> " << value << std::endl;
+        elem = value;
+    }
 }
 
 void test()
@@ -56,4 +71,9 @@ int main()
 
     std::cout << "size = " << matrix.size() << std::endl;
     iterate(matrix);
+    std::cout << "size = " << matrix.size() << std::endl;
+    fill(matrix, 500);
+    std::cout << "size = " << matrix.size() << std::endl;
+    iterate(matrix);
+    std::cout << "size = " << matrix.size() << std::endl;
 }

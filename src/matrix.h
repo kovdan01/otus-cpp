@@ -126,12 +126,73 @@ private:
     template <typename IndexIterator>
     const T& at(IndexIterator begin, IndexIterator end) const;
 
-public:
+private:
     // *** Iterators ***
     // ~~~~~~~~~~~~~~~~~
 
-    class Iterator;
-    class ConstIterator;
+    template <bool Const>
+    class IteratorT
+    {
+    private:
+        enum class Type { BEGIN, END, };
+        friend MatrixType;
+        using InstancePtr    = std::conditional_t<Const, const MatrixType*, MatrixType*>;
+        using ValueReference = std::conditional_t<Const, const T&, T&>;
+        IteratorT(InstancePtr instance, Type type);
+
+    public:
+        // *** Observers ***
+        // ~~~~~~~~~~~~~~~~~
+
+        /**
+         * @brief Gets index and value of the element that iterator refers to
+         * @return Index and value of the element that iterator refers to
+         */
+        std::pair<IndexType, ValueReference> operator*() const;
+
+        /**
+         * @brief Gets index of the element that iterator refers to
+         * @return Index of the element that iterator refers to
+         */
+        IndexType index() const;
+
+        /**
+         * @brief Gets value of the element that iterator refers to
+         * @return Value of the element that iterator refers to
+         */
+        ValueReference value() const;
+
+        // *** Mutators ***
+        // ~~~~~~~~~~~~~~~~
+
+        /**
+         * @brief Goes to the next element
+         * @return Iterator referring to the next element
+         */
+        IteratorT& operator++();
+
+        /**
+         * @brief Goes to the next element
+         * @return Iterator referring to the current element
+         */
+        const IteratorT operator++(int);
+
+        // *** Compare operators ***
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        bool operator==(const IteratorT& other) const;
+        bool operator!=(const IteratorT& other) const;
+
+    private:
+        InstancePtr m_instance;
+        std::optional<typename SubMatrixType::template IteratorT<Const>> m_sub_iterator;
+        using StorageIterator = std::conditional_t<Const, typename StorageType::const_iterator, typename StorageType::iterator>;
+        StorageIterator m_current_iterator;
+    };
+
+public:
+    using Iterator      = IteratorT<false>;
+    using ConstIterator = IteratorT<true>;
 
     /**
      * @brief Gets the iterator to the begin of explicitly-defined elements range
@@ -156,118 +217,6 @@ public:
      * @return Constant terator to the end of explicitly-defined elements range
      */
     ConstIterator end() const;
-
-    class Iterator
-    {
-    private:
-        enum class Type { BEGIN, END, };
-        friend MatrixType;
-        Iterator(MatrixType* instance, Type type);
-
-    public:
-        // *** Observers ***
-        // ~~~~~~~~~~~~~~~~~
-
-        /**
-         * @brief Gets index and value of the element that iterator refers to
-         * @return Index and value of the element that iterator refers to
-         */
-        std::pair<IndexType, T&> operator*() const;
-
-        /**
-         * @brief Gets index of the element that iterator refers to
-         * @return Index of the element that iterator refers to
-         */
-        IndexType index() const;
-
-        /**
-         * @brief Gets value of the element that iterator refers to
-         * @return Value of the element that iterator refers to
-         */
-        T& value() const;
-
-        // *** Mutators ***
-        // ~~~~~~~~~~~~~~~~
-
-        /**
-         * @brief Goes to the next element
-         * @return Iterator referring to the next element
-         */
-        Iterator& operator++();
-
-        /**
-         * @brief Goes to the next element
-         * @return Iterator referring to the current element
-         */
-        const Iterator operator++(int);
-
-        // *** Compare operators ***
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        bool operator==(const Iterator& other) const;
-        bool operator!=(const Iterator& other) const;
-
-    private:
-        MatrixType* m_instance;
-        std::optional<typename SubMatrixType::ConstIterator> m_sub_iterator;
-        typename StorageType::const_iterator m_current_iterator;
-    };
-
-    class ConstIterator
-    {
-    private:
-        enum class Type { BEGIN, END, };
-        friend MatrixType;
-        ConstIterator(const MatrixType* instance, Type type);
-
-    public:
-        // *** Observers ***
-        // ~~~~~~~~~~~~~~~~~
-
-        /**
-         * @brief Gets index and value of the element that iterator refers to
-         * @return Index and value of the element that iterator refers to
-         */
-        std::pair<IndexType, const T&> operator*() const;
-
-        /**
-         * @brief Gets index of the element that iterator refers to
-         * @return Index of the element that iterator refers to
-         */
-        IndexType index() const;
-
-        /**
-         * @brief Gets value of the element that iterator refers to
-         * @return Value of the element that iterator refers to
-         */
-        const T& value() const;
-
-        // *** Mutators ***
-        // ~~~~~~~~~~~~~~~~
-
-        /**
-         * @brief Goes to the next element
-         * @return Iterator referring to the next element
-         */
-        ConstIterator& operator++();
-
-        /**
-         * @brief Goes to the next element
-         * @return Iterator referring to the current element
-         */
-        const ConstIterator operator++(int);
-
-        // *** Compare operators ***
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        bool operator==(const ConstIterator& other) const;
-        bool operator!=(const ConstIterator& other) const;
-
-    private:
-        const MatrixType* m_instance;
-        std::optional<typename SubMatrixType::ConstIterator> m_sub_iterator;
-        typename StorageType::const_iterator m_current_iterator;
-    };
 
 private:
     StorageType m_values;
@@ -349,81 +298,53 @@ private:
     template <typename IndexIterator>
     const T& at(IndexIterator, IndexIterator) const;
 
-public:
+private:
     // *** Iterators ***
     // ~~~~~~~~~~~~~~~~~
 
-    class Iterator;
-    class ConstIterator;
+    template <bool Const>
+    class IteratorT
+    {
+    private:
+        enum class Type { BEGIN, END, };
+        friend MatrixType;
+        using InstancePtr    = std::conditional_t<Const, const MatrixType*, MatrixType*>;
+        using ValueReference = std::conditional_t<Const, const T&, T&>;
+        IteratorT(InstancePtr instance, Type type);
+
+    public:
+        // *** Observers ***
+        // ~~~~~~~~~~~~~~~~~
+
+        std::pair<IndexType, ValueReference> operator*() const;
+        IndexType index() const;
+        ValueReference value() const;
+
+        // *** Mutators ***
+        // ~~~~~~~~~~~~~~~~
+
+        IteratorT& operator++();
+        const IteratorT operator++(int);
+
+        // *** Compare operators ***
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        bool operator==(const IteratorT& other) const;
+        bool operator!=(const IteratorT& other) const;
+
+    private:
+        InstancePtr m_instance;
+        Type m_type;
+    };
+
+public:
+    using Iterator      = IteratorT<false>;
+    using ConstIterator = IteratorT<true>;
 
     Iterator begin();
     Iterator end();
     ConstIterator begin() const;
     ConstIterator end() const;
-
-    class Iterator
-    {
-    private:
-        enum class Type { BEGIN, END, };
-        friend MatrixType;
-        Iterator(MatrixType* instance, Type type);
-
-    public:
-        // *** Observers ***
-        // ~~~~~~~~~~~~~~~~~
-
-        std::pair<IndexType, T&> operator*() const;
-        IndexType index() const;
-        T& value() const;
-
-        // *** Mutators ***
-        // ~~~~~~~~~~~~~~~~
-
-        Iterator& operator++();
-        const Iterator operator++(int);
-
-        // *** Compare operators ***
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        bool operator==(const Iterator& other) const;
-        bool operator!=(const Iterator& other) const;
-
-    private:
-        MatrixType* m_instance;
-        Type m_type;
-    };
-
-    class ConstIterator
-    {
-    private:
-        enum class Type { BEGIN, END, };
-        friend MatrixType;
-        ConstIterator(const MatrixType* instance, Type type);
-
-    public:
-        // *** Observers ***
-        // ~~~~~~~~~~~~~~~~~
-
-        std::pair<IndexType, const T&> operator*() const;
-        IndexType index() const;
-        const T& value() const;
-
-        // *** Mutators ***
-        // ~~~~~~~~~~~~~~~~
-
-        ConstIterator& operator++();
-        const ConstIterator operator++(int);
-
-        // *** Compare operators ***
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        bool operator==(const ConstIterator& other) const;
-        bool operator!=(const ConstIterator& other) const;
-
-    private:
-        const MatrixType* m_instance;
-        Type m_type;
-    };
 
 private:
     T m_value{};
@@ -538,6 +459,11 @@ const T& MATRIX_TYPE::at(IndexIterator begin, IndexIterator end) const
 }
 
 
+
+
+
+
+
 // *** Constant Iterator creation functions ***
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -554,156 +480,60 @@ typename MATRIX_TYPE::ConstIterator MATRIX_TYPE::end() const
 }
 
 
-// *** Constant Iterator constructors ***
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-TEMPLATE_ARGS
-MATRIX_TYPE::ConstIterator::ConstIterator(const MatrixType* instance, Type type)
-    : m_instance(instance)
-{
-    switch (type)
-    {
-    case Type::BEGIN:
-        m_current_iterator = m_instance->m_values.cbegin();
-        if (m_instance->m_values.begin() == m_instance->m_values.cend())
-        {
-            m_sub_iterator = std::nullopt;
-        }
-        else
-        {
-            m_sub_iterator = m_current_iterator->second.begin();
-        }
-        break;
-    case Type::END:
-        m_current_iterator = m_instance->m_values.cend();
-        m_sub_iterator = std::nullopt;
-        break;
-    }
-}
-
-
-// *** Constant Iterator observers ***
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-TEMPLATE_ARGS
-std::pair<typename MATRIX_TYPE::IndexType, const T&> MATRIX_TYPE::ConstIterator::operator*() const
-{
-    std::pair<IndexType, const T&> p(index(), value());
-    return p;
-}
-
-TEMPLATE_ARGS
-typename MATRIX_TYPE::IndexType MATRIX_TYPE::ConstIterator::index() const
-{
-    IndexType answer;
-    answer[0] = m_current_iterator->first;
-    SubIndexType subindex = m_sub_iterator.value().index();
-    for (std::size_t i = 0; i < subindex.size(); ++i)
-        answer[i + 1] = subindex[i];
-    return answer;
-}
-
-TEMPLATE_ARGS
-const T& MATRIX_TYPE::ConstIterator::value() const
-{
-    const T& ans = m_sub_iterator.value().value();
-    return ans;
-}
-
-
-// *** Constant Iterator mutators ***
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-TEMPLATE_ARGS
-typename MATRIX_TYPE::ConstIterator& MATRIX_TYPE::ConstIterator::operator++()
-{
-    auto job = [this]() -> void
-    {
-        ++m_sub_iterator.value();
-        while (m_sub_iterator == m_current_iterator->second.end())
-        {
-            ++m_current_iterator;
-            if (m_current_iterator == m_instance->m_values.end())
-            {
-                m_sub_iterator = std::nullopt;
-                return;
-            }
-            m_sub_iterator = m_current_iterator->second.begin();
-        }
-    };
-
-    do
-    {
-        job();
-    } while (m_sub_iterator != std::nullopt && value() == m_instance->m_default_value);
-
-    return *this;
-}
-
-TEMPLATE_ARGS
-const typename MATRIX_TYPE::ConstIterator MATRIX_TYPE::ConstIterator::operator++(int)
-{
-    ConstIterator old = *this;
-    ++(*this);
-    return old;
-}
-
-
-// *** Constant Iterator compare operators ***
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-TEMPLATE_ARGS
-bool MATRIX_TYPE::ConstIterator::operator==(const MATRIX_TYPE::ConstIterator& other) const
-{
-    return std::tie(m_instance, m_sub_iterator, m_current_iterator) ==
-           std::tie(other.m_instance, other.m_sub_iterator, other.m_current_iterator);
-}
-
-TEMPLATE_ARGS
-bool MATRIX_TYPE::ConstIterator::operator!=(const MATRIX_TYPE::ConstIterator& other) const
-{
-    return !(*this == other);
-}
-
-
-// *** Iterator creation functions ***
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// *** Constant Iterator creation functions ***
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 TEMPLATE_ARGS
 typename MATRIX_TYPE::Iterator MATRIX_TYPE::begin()
 {
-    return ConstIterator(this, Iterator::Type::BEGIN);
+    return Iterator(this, Iterator::Type::BEGIN);
 }
 
 TEMPLATE_ARGS
 typename MATRIX_TYPE::Iterator MATRIX_TYPE::end()
 {
-    return ConstIterator(this, Iterator::Type::END);
+    return Iterator(this, Iterator::Type::END);
 }
 
+
+#define ITERATOR MATRIX_TYPE::template IteratorT<Const>
 
 // *** Iterator constructors ***
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 TEMPLATE_ARGS
-MATRIX_TYPE::Iterator::Iterator(MatrixType* instance, Type type)
+template <bool Const>
+ITERATOR::IteratorT(InstancePtr instance, Type type)
     : m_instance(instance)
 {
     switch (type)
     {
     case Type::BEGIN:
-        m_current_iterator = m_instance->m_values.cbegin();
-        if (m_instance->m_values.begin() == m_instance->m_values.cend())
+    {
+        m_current_iterator = m_instance->m_values.begin();
+        bool init = false;
+        for (; m_current_iterator != m_instance->m_values.end(); ++m_current_iterator)
         {
+            for (m_sub_iterator  = m_current_iterator->second.begin();
+                 m_sub_iterator != m_current_iterator->second.end();
+                 ++m_sub_iterator.value())
+            {
+                if (m_sub_iterator.value().value() != m_instance->m_default_value)
+                {
+                    init = true;
+                    goto after_loop;
+                }
+            }
+        }
+        after_loop: ;
+
+        if (!init)
             m_sub_iterator = std::nullopt;
-        }
-        else
-        {
-            m_sub_iterator = m_current_iterator->second.begin();
-        }
+
         break;
+    }
     case Type::END:
-        m_current_iterator = m_instance->m_values.cend();
+        m_current_iterator = m_instance->m_values.end();
         m_sub_iterator = std::nullopt;
         break;
     }
@@ -714,14 +544,16 @@ MATRIX_TYPE::Iterator::Iterator(MatrixType* instance, Type type)
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 TEMPLATE_ARGS
-std::pair<typename MATRIX_TYPE::IndexType, T&> MATRIX_TYPE::Iterator::operator*() const
+template <bool Const>
+std::pair<typename MATRIX_TYPE::IndexType, typename ITERATOR::ValueReference> ITERATOR::operator*() const
 {
-    std::pair<IndexType, T&> p(index(), value());
+    std::pair<IndexType, ValueReference> p(index(), value());
     return p;
 }
 
 TEMPLATE_ARGS
-typename MATRIX_TYPE::IndexType MATRIX_TYPE::Iterator::index() const
+template <bool Const>
+typename MATRIX_TYPE::IndexType ITERATOR::index() const
 {
     IndexType answer;
     answer[0] = m_current_iterator->first;
@@ -732,9 +564,10 @@ typename MATRIX_TYPE::IndexType MATRIX_TYPE::Iterator::index() const
 }
 
 TEMPLATE_ARGS
-T& MATRIX_TYPE::Iterator::value() const
+template <bool Const>
+typename ITERATOR::ValueReference ITERATOR::value() const
 {
-    const T& ans = m_sub_iterator.value().value();
+    ValueReference ans = m_sub_iterator.value().value();
     return ans;
 }
 
@@ -743,7 +576,8 @@ T& MATRIX_TYPE::Iterator::value() const
 // ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 TEMPLATE_ARGS
-typename MATRIX_TYPE::Iterator& MATRIX_TYPE::Iterator::operator++()
+template <bool Const>
+typename ITERATOR& ITERATOR::operator++()
 {
     auto job = [this]() -> void
     {
@@ -769,9 +603,10 @@ typename MATRIX_TYPE::Iterator& MATRIX_TYPE::Iterator::operator++()
 }
 
 TEMPLATE_ARGS
-const typename MATRIX_TYPE::Iterator MATRIX_TYPE::Iterator::operator++(int)
+template <bool Const>
+const typename ITERATOR ITERATOR::operator++(int)
 {
-    Iterator old = *this;
+    IteratorT<Const> old = *this;
     ++(*this);
     return old;
 }
@@ -781,18 +616,21 @@ const typename MATRIX_TYPE::Iterator MATRIX_TYPE::Iterator::operator++(int)
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 TEMPLATE_ARGS
-bool MATRIX_TYPE::Iterator::operator==(const MATRIX_TYPE::Iterator& other) const
+template <bool Const>
+bool ITERATOR::operator==(const ITERATOR& other) const
 {
     return std::tie(m_instance, m_sub_iterator, m_current_iterator) ==
            std::tie(other.m_instance, other.m_sub_iterator, other.m_current_iterator);
 }
 
 TEMPLATE_ARGS
-bool MATRIX_TYPE::Iterator::operator!=(const MATRIX_TYPE::Iterator& other) const
+template <bool Const>
+bool ITERATOR::operator!=(const ITERATOR& other) const
 {
     return !(*this == other);
 }
 
+#undef ITERATOR
 
 #undef TEMPLATE_ARGS
 #undef MATRIX_TYPE
@@ -894,95 +732,30 @@ typename MATRIX_TYPE_0D::ConstIterator MATRIX_TYPE_0D::end() const
 }
 
 
-// *** Constant Iterator constructors ***
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-TEMPLATE_ARGS_0D
-MATRIX_TYPE_0D::ConstIterator::ConstIterator(const MatrixType* instance, Type type)
-    : m_instance(instance)
-    , m_type(type)
-{
-}
-
-
-// *** Constant Iterator observers ***
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-TEMPLATE_ARGS_0D
-std::pair<typename MATRIX_TYPE_0D::IndexType, const T&> MATRIX_TYPE_0D::ConstIterator::operator*() const
-{
-    return std::make_pair(index(), value());
-}
-
-TEMPLATE_ARGS_0D
-typename MATRIX_TYPE_0D::IndexType MATRIX_TYPE_0D::ConstIterator::index() const
-{
-    return {};
-}
-
-TEMPLATE_ARGS_0D
-const T& MATRIX_TYPE_0D::ConstIterator::value() const
-{
-    return m_instance->m_value;
-}
-
-
-// *** Constant Iterator mutators ***
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-TEMPLATE_ARGS_0D
-typename MATRIX_TYPE_0D::ConstIterator& MATRIX_TYPE_0D::ConstIterator::operator++()
-{
-    m_type = Type::END;
-    return *this;
-}
-
-TEMPLATE_ARGS_0D
-const typename MATRIX_TYPE_0D::ConstIterator MATRIX_TYPE_0D::ConstIterator::operator++(int)
-{
-    ConstIterator old = *this;
-    ++(*this);
-    return old;
-}
-
-
-// *** Constant Iterator compare operators ***
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-TEMPLATE_ARGS_0D
-bool MATRIX_TYPE_0D::ConstIterator::operator==(const ConstIterator& other) const
-{
-    return std::tie(m_instance, m_type) == std::tie(other.m_instance, other.m_type);
-}
-
-TEMPLATE_ARGS_0D
-bool MATRIX_TYPE_0D::ConstIterator::operator!=(const ConstIterator& other) const
-{
-    return !(*this == other);
-}
-
-
 // *** Iterator creation functions ***
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 TEMPLATE_ARGS_0D
 typename MATRIX_TYPE_0D::Iterator MATRIX_TYPE_0D::begin()
 {
-    return ConstIterator(this, ConstIterator::Type::BEGIN);
+    return Iterator(this, Iterator::Type::BEGIN);
 }
 
 TEMPLATE_ARGS_0D
 typename MATRIX_TYPE_0D::Iterator MATRIX_TYPE_0D::end()
 {
-    return ConstIterator(this, ConstIterator::Type::END);
+    return Iterator(this, Iterator::Type::END);
 }
 
 
-// *** Iterator constructors ***
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#define ITERATOR_0D MATRIX_TYPE_0D::template IteratorT<Const>
+
+// *** Constant Iterator constructors ***
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 TEMPLATE_ARGS_0D
-MATRIX_TYPE_0D::Iterator::Iterator(MatrixType* instance, Type type)
+template <bool Const>
+ITERATOR_0D::IteratorT(InstancePtr instance, Type type)
     : m_instance(instance)
     , m_type(type)
 {
@@ -993,19 +766,23 @@ MATRIX_TYPE_0D::Iterator::Iterator(MatrixType* instance, Type type)
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 TEMPLATE_ARGS_0D
-std::pair<typename MATRIX_TYPE_0D::IndexType, T&> MATRIX_TYPE_0D::Iterator::operator*() const
+template <bool Const>
+std::pair<typename MATRIX_TYPE_0D::IndexType, typename ITERATOR_0D::ValueReference> ITERATOR_0D::operator*() const
 {
-    return std::make_pair(index(), value());
+    std::pair<IndexType, ValueReference> p(index(), value());
+    return p;
 }
 
 TEMPLATE_ARGS_0D
-typename MATRIX_TYPE_0D::IndexType MATRIX_TYPE_0D::Iterator::index() const
+template <bool Const>
+typename MATRIX_TYPE_0D::IndexType ITERATOR_0D::index() const
 {
     return {};
 }
 
 TEMPLATE_ARGS_0D
-T& MATRIX_TYPE_0D::Iterator::value() const
+template <bool Const>
+typename ITERATOR_0D::ValueReference ITERATOR_0D::value() const
 {
     return m_instance->m_value;
 }
@@ -1015,16 +792,18 @@ T& MATRIX_TYPE_0D::Iterator::value() const
 // ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 TEMPLATE_ARGS_0D
-typename MATRIX_TYPE_0D::Iterator& MATRIX_TYPE_0D::Iterator::operator++()
+template <bool Const>
+typename ITERATOR_0D& ITERATOR_0D::operator++()
 {
     m_type = Type::END;
     return *this;
 }
 
 TEMPLATE_ARGS_0D
-const typename MATRIX_TYPE_0D::Iterator MATRIX_TYPE_0D::Iterator::operator++(int)
+template <bool Const>
+const typename ITERATOR_0D ITERATOR_0D::operator++(int)
 {
-    Iterator old = *this;
+    IteratorT<Const> old = *this;
     ++(*this);
     return old;
 }
@@ -1034,17 +813,20 @@ const typename MATRIX_TYPE_0D::Iterator MATRIX_TYPE_0D::Iterator::operator++(int
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 TEMPLATE_ARGS_0D
-bool MATRIX_TYPE_0D::Iterator::operator==(const Iterator& other) const
+template <bool Const>
+bool ITERATOR_0D::operator==(const ITERATOR_0D& other) const
 {
     return std::tie(m_instance, m_type) == std::tie(other.m_instance, other.m_type);
 }
 
 TEMPLATE_ARGS_0D
-bool MATRIX_TYPE_0D::Iterator::operator!=(const Iterator& other) const
+template <bool Const>
+bool ITERATOR_0D::operator!=(const ITERATOR_0D& other) const
 {
     return !(*this == other);
 }
 
+#undef ITERATOR_0D
 
 #undef TEMPLATE_ARGS_0D
 #undef MATRIX_TYPE_0D
