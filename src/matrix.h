@@ -109,16 +109,16 @@ public:
      * @param index Index of submatrix to get
      * @return The submatrix with `dimensions - 1` dimensions on index `index`
      */
-    SubMatrixType& operator[](std::size_t index);
-    const SubMatrixType& operator[](std::size_t index) const;
+    [[nodiscard]] SubMatrixType& operator[](std::size_t index);
+    [[nodiscard]] const SubMatrixType& operator[](std::size_t index) const;
 
     /**
      * @brief Gets value at the given position
      * @param index Position in matrix
      * @return The matrix cell value on the given position
      */
-    T& at(const IndexType& index);
-    const T& at(const IndexType& index) const;
+    [[nodiscard]] T& at(const IndexType& index);
+    [[nodiscard]] const T& at(const IndexType& index) const;
 
 private:
     template <typename IndexIterator>
@@ -148,19 +148,19 @@ private:
          * @brief Gets index and value of the element that iterator refers to
          * @return Index and value of the element that iterator refers to
          */
-        std::pair<IndexType, ValueReference> operator*() const;
+        [[nodiscard]] std::pair<IndexType, ValueReference> operator*() const;
 
         /**
          * @brief Gets index of the element that iterator refers to
          * @return Index of the element that iterator refers to
          */
-        IndexType index() const;
+        [[nodiscard]] IndexType index() const;
 
         /**
          * @brief Gets value of the element that iterator refers to
          * @return Value of the element that iterator refers to
          */
-        ValueReference value() const;
+        [[nodiscard]] ValueReference value() const;
 
         // *** Mutators ***
         // ~~~~~~~~~~~~~~~~
@@ -175,13 +175,13 @@ private:
          * @brief Goes to the next element
          * @return Iterator referring to the current element
          */
-        const IteratorT operator++(int);
+        [[nodiscard]] const IteratorT operator++(int);
 
         // *** Compare operators ***
         // ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        bool operator==(const IteratorT& other) const;
-        bool operator!=(const IteratorT& other) const;
+        [[nodiscard]] bool operator==(const IteratorT& other) const;
+        [[nodiscard]] bool operator!=(const IteratorT& other) const;
 
     private:
         InstancePtr m_instance;
@@ -198,25 +198,25 @@ public:
      * @brief Gets the iterator to the begin of explicitly-defined elements range
      * @return Iterator to the begin of explicitly-defined elements range
      */
-    Iterator begin();
+    [[nodiscard]] Iterator begin();
 
     /**
      * @brief Gets the iterator to the end of explicitly-defined elements range
      * @return Iterator to the end of explicitly-defined elements range
      */
-    Iterator end();
+    [[nodiscard]] Iterator end();
 
     /**
      * @brief Gets the constant iterator to the begin of explicitly-defined elements range
      * @return Constant iterator to the begin of explicitly-defined elements range
      */
-    ConstIterator begin() const;
+    [[nodiscard]] ConstIterator begin() const;
 
     /**
      * @brief Gets the constant iterator to the end of explicitly-defined elements range
      * @return Constant terator to the end of explicitly-defined elements range
      */
-    ConstIterator end() const;
+    [[nodiscard]] ConstIterator end() const;
 
 private:
     StorageType m_values;
@@ -289,8 +289,8 @@ public:
     // *** Index access ***
     // ~~~~~~~~~~~~~~~~~~~~
 
-    T& at(const IndexType&);
-    const T& at(const IndexType&) const;
+    [[nodiscard]] T& at(const IndexType&);
+    [[nodiscard]] const T& at(const IndexType&) const;
 
 private:
     template <typename IndexIterator>
@@ -316,21 +316,21 @@ private:
         // *** Observers ***
         // ~~~~~~~~~~~~~~~~~
 
-        std::pair<IndexType, ValueReference> operator*() const;
-        IndexType index() const;
-        ValueReference value() const;
+        [[nodiscard]] std::pair<IndexType, ValueReference> operator*() const;
+        [[nodiscard]] IndexType index() const;
+        [[nodiscard]] ValueReference value() const;
 
         // *** Mutators ***
         // ~~~~~~~~~~~~~~~~
 
         IteratorT& operator++();
-        const IteratorT operator++(int);
+        [[nodiscard]] const IteratorT operator++(int);
 
         // *** Compare operators ***
         // ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        bool operator==(const IteratorT& other) const;
-        bool operator!=(const IteratorT& other) const;
+        [[nodiscard]] bool operator==(const IteratorT& other) const;
+        [[nodiscard]] bool operator!=(const IteratorT& other) const;
 
     private:
         InstancePtr m_instance;
@@ -341,10 +341,10 @@ public:
     using Iterator      = IteratorT<false>;
     using ConstIterator = IteratorT<true>;
 
-    Iterator begin();
-    Iterator end();
-    ConstIterator begin() const;
-    ConstIterator end() const;
+    [[nodiscard]] Iterator begin();
+    [[nodiscard]] Iterator end();
+    [[nodiscard]] ConstIterator begin() const;
+    [[nodiscard]] ConstIterator end() const;
 
 private:
     T m_value{};
@@ -399,7 +399,7 @@ void MATRIX_TYPE::shrink_to_fit()
 {
     for (auto it = m_values.begin(); it != m_values.end();)
     {
-        if (it->second.size() == 0)
+        if (it->second.empty())
             it = m_values.erase(it);
         else
             ++it;
