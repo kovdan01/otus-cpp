@@ -6,6 +6,10 @@
 namespace my
 {
 
+/**
+ * @brief The ConsoleWriter class
+ * Represents a dummy stdout writer
+ */
 class ConsoleWriter : public IWriter
 {
 public:

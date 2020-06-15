@@ -19,8 +19,8 @@ set(INTERFACES
     src/interfaces/writer.h)
 
 set(HEADERS ${INTERFACES}
-    src/bulk_command.h
-    src/bulk_command_processor.h
+    src/dummy_command.h
+    src/dummy_command_processor.h
     src/command_storage.h
     src/console_reader.h
     src/console_writer.h
@@ -28,8 +28,8 @@ set(HEADERS ${INTERFACES}
 
 set(SOURCES
     src/interfaces/command.cpp
-    src/bulk_command.cpp
-    src/bulk_command_processor.cpp
+    src/dummy_command.cpp
+    src/dummy_command_processor.cpp
     src/command_storage.cpp
     src/console_reader.cpp
     src/console_writer.cpp

@@ -6,9 +6,16 @@
 namespace my
 {
 
+/**
+ * @brief The IWriter interface
+ */
 class IWriter
 {
 public:
+    /**
+     * @brief Write string
+     * @param str[in] String to be written
+     */
     virtual void write(const std::string& str) = 0;
 
     virtual ~IWriter() = default;

@@ -1,4 +1,4 @@
-#include "bulk_command_processor.h"
+#include "dummy_command_processor.h"
 #include "command_storage.h"
 #include "console_reader.h"
 #include "console_writer.h"
@@ -85,7 +85,7 @@ int main(int argc, char* argv[])
 
     my::ConsoleWriter console_writer;
     my::FileWriter file_writer("bulk", ".log");
-    my::BulkCommandProcessor bulk_command_processor;
+    my::DummyCommandProcessor bulk_command_processor;
     my::CommandStorage command_storage;
     my::ConsoleReader console_reader(context.block_size);
 

@@ -6,14 +6,18 @@
 namespace my
 {
 
-class BulkCommand : public ICommand
+/**
+ * @brief The DummyCommand class
+ * Represents a dummy command, that does nothing
+ */
+class DummyCommand : public ICommand
 {
 public:
     using ICommand::ICommand;
 
     void execute() override;
 
-    virtual ~BulkCommand() = default;
+    virtual ~DummyCommand() = default;
 };
 
 } // namespace my

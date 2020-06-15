@@ -10,16 +10,27 @@
 namespace my
 {
 
-class BulkCommandProcessor : public IProcessor
+/**
+ * @brief The DummyCommandProcessor class
+ * Represents a dummy command processor, that executes commands,
+ * prints command names to given loggers and logs
+ * command blocks to different files using FileWriter loggers
+ */
+class DummyCommandProcessor : public IProcessor
 {
 public:
     void add_writer(IWriter* writer) override;
+
+    /**
+     * @brief Adds special FileWriter logger for special different behavior
+     * @param writer[in] Pointer to logger to be added
+     */
     void add_writer(FileWriter* writer);
     void remove_writer(IWriter* writer) override;
 
     void process_data(std::shared_ptr<const std::vector<std::string>> data, std::uint64_t first_command_time) override;
 
-    virtual ~BulkCommandProcessor() = default;
+    virtual ~DummyCommandProcessor() = default;
 
 private:
     std::unordered_set<IWriter*> m_writers;

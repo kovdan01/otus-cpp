@@ -12,6 +12,11 @@
 namespace my
 {
 
+/**
+ * @brief The CommandStorage class
+ * Represents a storage for commands, that at first accumulates a block
+ * of data and then gives it to processors-subscribers
+ */
 class CommandStorage : public IStorage
 {
 public:

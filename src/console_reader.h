@@ -10,6 +10,10 @@
 namespace my
 {
 
+/**
+ * @brief The ConsoleReader class
+ * Represents a line-by-line reader from `std::istream` (stdin by default)
+ */
 class ConsoleReader : public IReader
 {
 public:
