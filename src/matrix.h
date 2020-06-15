@@ -496,14 +496,15 @@ typename MATRIX_TYPE::Iterator MATRIX_TYPE::end()
 }
 
 
-#define ITERATOR MATRIX_TYPE::template IteratorT<Const>
+#define ITERATOR    MATRIX_TYPE::IteratorT<Const>
+#define ITERATOR_T  MATRIX_TYPE::template IteratorT<Const>
 
 // *** Iterator constructors ***
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 TEMPLATE_ARGS
 template <bool Const>
-ITERATOR::IteratorT(InstancePtr instance, Type type)
+ITERATOR_T::IteratorT(InstancePtr instance, Type type)
     : m_instance(instance)
 {
     switch (type)
@@ -545,7 +546,7 @@ ITERATOR::IteratorT(InstancePtr instance, Type type)
 
 TEMPLATE_ARGS
 template <bool Const>
-std::pair<typename MATRIX_TYPE::IndexType, typename ITERATOR::ValueReference> ITERATOR::operator*() const
+std::pair<typename MATRIX_TYPE::IndexType, typename ITERATOR_T::ValueReference> ITERATOR::operator*() const
 {
     std::pair<IndexType, ValueReference> p(index(), value());
     return p;
@@ -565,7 +566,7 @@ typename MATRIX_TYPE::IndexType ITERATOR::index() const
 
 TEMPLATE_ARGS
 template <bool Const>
-typename ITERATOR::ValueReference ITERATOR::value() const
+typename ITERATOR_T::ValueReference ITERATOR::value() const
 {
     ValueReference ans = m_sub_iterator.value().value();
     return ans;
@@ -577,7 +578,7 @@ typename ITERATOR::ValueReference ITERATOR::value() const
 
 TEMPLATE_ARGS
 template <bool Const>
-typename ITERATOR& ITERATOR::operator++()
+typename ITERATOR_T& ITERATOR::operator++()
 {
     auto job = [this]() -> void
     {
@@ -604,7 +605,7 @@ typename ITERATOR& ITERATOR::operator++()
 
 TEMPLATE_ARGS
 template <bool Const>
-const typename ITERATOR ITERATOR::operator++(int)
+const typename ITERATOR_T ITERATOR::operator++(int)
 {
     IteratorT<Const> old = *this;
     ++(*this);
@@ -631,6 +632,7 @@ bool ITERATOR::operator!=(const ITERATOR& other) const
 }
 
 #undef ITERATOR
+#undef ITERATOR_T
 
 #undef TEMPLATE_ARGS
 #undef MATRIX_TYPE
@@ -748,7 +750,8 @@ typename MATRIX_TYPE_0D::Iterator MATRIX_TYPE_0D::end()
 }
 
 
-#define ITERATOR_0D MATRIX_TYPE_0D::template IteratorT<Const>
+#define ITERATOR_0D      MATRIX_TYPE_0D::IteratorT<Const>
+#define ITERATOR_0D_T    MATRIX_TYPE_0D::template IteratorT<Const>
 
 // *** Constant Iterator constructors ***
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -767,7 +770,7 @@ ITERATOR_0D::IteratorT(InstancePtr instance, Type type)
 
 TEMPLATE_ARGS_0D
 template <bool Const>
-std::pair<typename MATRIX_TYPE_0D::IndexType, typename ITERATOR_0D::ValueReference> ITERATOR_0D::operator*() const
+std::pair<typename MATRIX_TYPE_0D::IndexType, typename ITERATOR_0D_T::ValueReference> ITERATOR_0D::operator*() const
 {
     std::pair<IndexType, ValueReference> p(index(), value());
     return p;
@@ -782,7 +785,7 @@ typename MATRIX_TYPE_0D::IndexType ITERATOR_0D::index() const
 
 TEMPLATE_ARGS_0D
 template <bool Const>
-typename ITERATOR_0D::ValueReference ITERATOR_0D::value() const
+typename ITERATOR_0D_T::ValueReference ITERATOR_0D::value() const
 {
     return m_instance->m_value;
 }
@@ -793,7 +796,7 @@ typename ITERATOR_0D::ValueReference ITERATOR_0D::value() const
 
 TEMPLATE_ARGS_0D
 template <bool Const>
-typename ITERATOR_0D& ITERATOR_0D::operator++()
+typename ITERATOR_0D_T& ITERATOR_0D::operator++()
 {
     m_type = Type::END;
     return *this;
@@ -801,7 +804,7 @@ typename ITERATOR_0D& ITERATOR_0D::operator++()
 
 TEMPLATE_ARGS_0D
 template <bool Const>
-const typename ITERATOR_0D ITERATOR_0D::operator++(int)
+const typename ITERATOR_0D_T ITERATOR_0D::operator++(int)
 {
     IteratorT<Const> old = *this;
     ++(*this);
@@ -827,6 +830,7 @@ bool ITERATOR_0D::operator!=(const ITERATOR_0D& other) const
 }
 
 #undef ITERATOR_0D
+#undef ITERATOR_0D_T
 
 #undef TEMPLATE_ARGS_0D
 #undef MATRIX_TYPE_0D
