@@ -52,7 +52,7 @@ TEST_P(BulkTestParam, TestOutput)
     EXPECT_EQ(correct, output);
 }
 
-INSTANTIATE_TEST_SUITE_P
+INSTANTIATE_TEST_CASE_P
 (
     Bulk,
     BulkTestParam,
