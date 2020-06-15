@@ -28,6 +28,7 @@ public:
 private:
     std::shared_ptr<std::vector<std::string>> m_commands;
     std::unordered_set<IProcessor*> m_processors;
+    std::uint64_t m_first_command_time = 0;
 };
 
 } // namespace my

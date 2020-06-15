@@ -14,6 +14,7 @@ public:
     FileWriter(std::string filename_prefix, std::string filename_suffix);
 
     void write(const std::string& str) override;
+    void write(const std::string& str, std::uint64_t time);
 
     virtual ~FileWriter() = default;
 

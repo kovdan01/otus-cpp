@@ -1,4 +1,5 @@
 #include "bulk_command_processor.h"
+#include "bulk_command.h"
 
 #include <sstream>
 #include <cassert>
@@ -12,12 +13,18 @@ void BulkCommandProcessor::add_writer(IWriter* writer)
     m_writers.emplace(writer);
 }
 
+void BulkCommandProcessor::add_writer(FileWriter* writer)
+{
+    assert(writer != nullptr);
+    m_file_writers.emplace(writer);
+}
+
 void BulkCommandProcessor::remove_writer(IWriter* writer)
 {
     m_writers.erase(writer);
 }
 
-void BulkCommandProcessor::process_data(std::shared_ptr<const std::vector<std::string>> data)
+void BulkCommandProcessor::process_data(std::shared_ptr<const std::vector<std::string>> data, std::uint64_t first_command_time)
 {
     if (data->empty())
         return;
@@ -39,6 +46,8 @@ void BulkCommandProcessor::process_data(std::shared_ptr<const std::vector<std::s
     std::string str = output.str();
     for (IWriter* writer : m_writers)
         writer->write(str);
+    for (FileWriter* writer : m_file_writers)
+        writer->write(str, first_command_time);
 }
 
 } // namespace my

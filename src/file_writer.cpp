@@ -21,4 +21,11 @@ void FileWriter::write(const std::string& str)
     file << str;
 }
 
+void FileWriter::write(const std::string& str, std::uint64_t time)
+{
+    std::string filename = m_filename_prefix + std::to_string(time) + m_filename_suffix;
+    std::ofstream file(filename);
+    file << str;
+}
+
 } // namespace my
