@@ -33,13 +33,10 @@ set(SOURCES
     src/command_storage.cpp
     src/console_reader.cpp
     src/console_writer.cpp
-    src/file_writer.cpp
-    src/main.cpp)
+    src/file_writer.cpp)
 
-set(TEST_SOURCES src/tests.cpp)
-
-add_executable(07-bulk ${SOURCES} ${HEADERS})
-add_executable(tests ${TEST_SOURCES} ${HEADERS})
+add_executable(07-bulk src/main.cpp ${SOURCES} ${HEADERS})
+add_executable(tests src/tests.cpp ${SOURCES} ${HEADERS})
 
 set_target_properties(07-bulk tests PROPERTIES
     CXX_STANDARD 17

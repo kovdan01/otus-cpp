@@ -6,8 +6,9 @@
 namespace my
 {
 
-ConsoleReader::ConsoleReader(std::size_t block_size)
-    : m_block_size(block_size)
+ConsoleReader::ConsoleReader(std::size_t block_size, std::istream& input)
+    : m_input(input)
+    , m_block_size(block_size)
 {
 }
 
@@ -25,7 +26,7 @@ void ConsoleReader::remove_storage(IStorage* storage)
 void ConsoleReader::read()
 {
     std::string line;
-    while (std::getline(std::cin, line))
+    while (std::getline(m_input, line))
     {
         if (line == "{")
         {
