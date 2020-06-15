@@ -459,11 +459,6 @@ const T& MATRIX_TYPE::at(IndexIterator begin, IndexIterator end) const
 }
 
 
-
-
-
-
-
 // *** Constant Iterator creation functions ***
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
