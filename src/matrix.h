@@ -13,6 +13,8 @@
 namespace my
 {
 
+#define UNUSED(variable) (void)variable
+
 // ***************************************************************************
 //                     PRIMARY MATRIX CLASS DECLARATION
 // ***************************************************************************
@@ -453,8 +455,11 @@ TEMPLATE_ARGS
 std::size_t MATRIX_TYPE::size() const
 {
     std::size_t answer = 0;
-    for (auto& [index, value] : m_values)
+    for (const auto& [index, value] : m_values)
+    {
         answer += value.size();
+        UNUSED(index);
+    }
     return answer;
 }
 
@@ -490,7 +495,8 @@ typename MATRIX_TYPE::SubMatrixType& MATRIX_TYPE::operator[](std::size_t index)
     auto it = m_values.find(index);
     if (it != m_values.end())
         return it->second;
-    auto [emplaced, _] = m_values.emplace(index, Matrix<T, dimensions - 1, Allocator>(m_default_value));
+    auto [emplaced, b] = m_values.emplace(index, Matrix<T, dimensions - 1, Allocator>(m_default_value));
+    UNUSED(b);
     return emplaced->second;
 }
 
@@ -592,7 +598,7 @@ typename MATRIX_TYPE::IndexType MATRIX_TYPE::ConstIterator::index() const
     IndexType answer;
     answer[0] = m_current_iterator->first;
     SubIndexType subindex = m_sub_iterator.value().index();
-    for (int i = 0; i < subindex.size(); ++i)
+    for (std::size_t i = 0; i < subindex.size(); ++i)
         answer[i + 1] = subindex[i];
     return answer;
 }
@@ -720,7 +726,7 @@ typename MATRIX_TYPE::IndexType MATRIX_TYPE::Iterator::index() const
     IndexType answer;
     answer[0] = m_current_iterator->first;
     SubIndexType subindex = m_sub_iterator.value().index();
-    for (int i = 0; i < subindex.size(); ++i)
+    for (std::size_t i = 0; i < subindex.size(); ++i)
         answer[i + 1] = subindex[i];
     return answer;
 }
@@ -1042,6 +1048,8 @@ bool MATRIX_TYPE_0D::Iterator::operator!=(const Iterator& other) const
 
 #undef TEMPLATE_ARGS_0D
 #undef MATRIX_TYPE_0D
+
+#undef UNUSED
 
 } // namespace my
 
