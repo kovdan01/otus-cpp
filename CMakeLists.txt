@@ -28,10 +28,11 @@ set(HASH
     src/hash/crc16.cpp)
 
 set(SOURCES ${HEADERS} ${HASH} ${FILESYSTEM} src/main.cpp)
-set(TEST_SOURCES ${HASH} ${FILESYSTEM} src/tests.cpp)
+set(TEST_SOURCES ${HASH} ${FILESYSTEM} tests/tests.cpp)
 
 add_executable(09-bayan ${SOURCES})
 add_executable(tests ${TEST_SOURCES})
+file(COPY tests/a DESTINATION ${CMAKE_BINARY_DIR})
 
 set_target_properties(09-bayan tests PROPERTIES
     CXX_STANDARD 17
@@ -43,7 +44,7 @@ set_target_properties(09-bayan tests PROPERTIES
 target_include_directories(09-bayan PRIVATE "${CMAKE_BINARY_DIR}")
 target_link_libraries(09-bayan PRIVATE Boost::program_options stdc++fs)
 
-target_include_directories(tests PRIVATE ${GTest_INCLUDE_DIR})
+target_include_directories(tests PRIVATE ${GTest_INCLUDE_DIR} src)
 target_link_libraries(tests PRIVATE gtest pthread stdc++fs)
 
 if(MSVC)
