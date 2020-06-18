@@ -41,10 +41,10 @@ set_target_properties(09-bayan tests PROPERTIES
 
 # add version.h
 target_include_directories(09-bayan PRIVATE "${CMAKE_BINARY_DIR}")
-target_link_libraries(09-bayan PRIVATE Boost::program_options)
+target_link_libraries(09-bayan PRIVATE Boost::program_options stdc++fs)
 
 target_include_directories(tests PRIVATE ${GTest_INCLUDE_DIR})
-target_link_libraries(tests PRIVATE gtest pthread)
+target_link_libraries(tests PRIVATE gtest pthread stdc++fs)
 
 if(MSVC)
     target_compile_options(09-bayan PRIVATE

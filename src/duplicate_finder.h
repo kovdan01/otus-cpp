@@ -204,7 +204,7 @@ auto DuplicateFinder<Hash>::get_duplicates() -> std::vector<std::vector<Path>>
     {
         ans.emplace_back(std::vector<Path>{});
         ans.back().reserve(equal_group.size());
-        for (decltype (equal_group)::iterator it = equal_group.begin(), next; it != equal_group.end(); it = next)
+        for (typename decltype (equal_group)::iterator it = equal_group.begin(), next; it != equal_group.end(); it = next)
         {
             next = std::next(it);
             ans.back().emplace_back(std::move(equal_group.extract(it).value()));

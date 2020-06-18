@@ -11,9 +11,9 @@ addons:
     - graphviz
 
 before_script:
-- sudo apt-get install libboost-program-options-dev libgtest-dev build-essential cmake -y
-- echo "deb http://archive.ubuntu.com/ubuntu xenial main universe" | sudo tee -a /etc/apt/sources.list
+- echo "deb http://archive.ubuntu.com/ubuntu bionic main universe" | sudo tee -a /etc/apt/sources.list
 - sudo apt-get update -qq
+- sudo apt-get install gcc-8 g++-8 libboost-program-options-dev libgtest-dev build-essential cmake -y
 - cd /usr/src/gtest
 - sudo cmake CMakeLists.txt
 - sudo make
@@ -22,7 +22,7 @@ before_script:
 
 script:
 - doxygen Doxyfile
-- cmake .
+- cmake -DCMAKE_C_COMPILER=gcc-8 -DCMAKE_CXX_COMPILER=g++-8 .
 - cmake --build .
 - cmake --build . --target test
 - cmake --build . --target package
