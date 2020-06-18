@@ -28,11 +28,11 @@ set(HASH
     src/hash/crc16.cpp)
 
 set(SOURCES ${HEADERS} ${HASH} ${FILESYSTEM} src/main.cpp)
-set(TEST_SOURCES ${HASH} ${FILESYSTEM} tests/tests.cpp)
+set(TEST_SOURCES ${HASH} ${FILESYSTEM} test/tests.cpp)
 
 add_executable(09-bayan ${SOURCES})
 add_executable(tests ${TEST_SOURCES})
-file(COPY tests/a DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY test/a DESTINATION ${CMAKE_BINARY_DIR})
 
 set_target_properties(09-bayan tests PROPERTIES
     CXX_STANDARD 17
