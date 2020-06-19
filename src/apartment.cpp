@@ -31,7 +31,7 @@ double distance(const Apartment& lhs, const Apartment& rhs)
 dlib::matrix<double, 7, 1> normalize_apartment(const Apartment& data)
 {
     return dlib::matrix<double, 7, 1>
-    {
+    ({
         data.longitude / detail::MAX_LONGITUDE,
         data.latitude / detail::MAX_LATITUDE,
         data.rooms_number > detail::MAX_ROOMS_NUMBER ? 1 : data.rooms_number / detail::MAX_ROOMS_NUMBER,
@@ -39,7 +39,7 @@ dlib::matrix<double, 7, 1> normalize_apartment(const Apartment& data)
         data.area > detail::MAX_AREA ? 1 : data.area / detail::MAX_AREA,
         data.kitchen > detail::MAX_KITCHEN ? 1 : data.kitchen / detail::MAX_KITCHEN,
         data.floor == 1 || data.floor == data.floors_num ? 1. : 0
-    };
+    });
 }
 
 std::vector<dlib::matrix<double, 7, 1>> normalize_apartments(const std::vector<Apartment>& data)
