@@ -17,7 +17,7 @@ set(SOURCES src/main.cpp)
 add_executable(15-kkmeans ${SOURCES} ${HEADERS})
 
 set_target_properties(15-kkmeans PROPERTIES
-    CXX_STANDARD 17
+    CXX_STANDARD 14
     CXX_STANDARD_REQUIRED ON
     CXX_EXTENSIONS OFF
 )
