@@ -92,8 +92,7 @@ else()
     )
 endif()
 
-
-install(TARGETS async async_cli RUNTIME DESTINATION bin)
+install(TARGETS async LIBRARY DESTINATION bin)
 
 set(CPACK_GENERATOR DEB)
 
