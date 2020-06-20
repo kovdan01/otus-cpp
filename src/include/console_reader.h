@@ -23,6 +23,7 @@ public:
     void remove_storage(IStorage* storage) override;
 
     void read() override;
+    void set_stream(std::istream& input);
 
     virtual ~ConsoleReader();
 
@@ -34,7 +35,7 @@ private:
     void notify_new_line(const std::string& line);
 
     std::unordered_set<IStorage*> m_storages;
-    std::istream& m_input;
+    std::istream* m_input;
     std::size_t m_block_size;
     std::size_t m_lines_accumulated = 0;
     unsigned int m_braces_level = 0;

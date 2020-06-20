@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 3.2)
 
 
 if(DEFINED ENV{TRAVIS_BUILD_NUMBER})
-    project(10-bulkmt VERSION 0.0.$ENV{TRAVIS_BUILD_NUMBER})
+    project(11-async VERSION 0.0.$ENV{TRAVIS_BUILD_NUMBER})
 else()
-    project(10-bulkmt VERSION 0.0.1)
+    project(11-async VERSION 0.0.1)
 endif()
 
 configure_file(version.h.in version.h)
@@ -38,40 +38,62 @@ set(SOURCES
     src/logic/file_writer.cpp
     src/thread/thread_pool.cpp)
 
-add_executable(10-bulkmt src/main.cpp ${SOURCES} ${HEADERS})
-add_executable(tests src/tests.cpp ${SOURCES} ${HEADERS})
+add_executable(bulkmt src/main.cpp)
+add_executable(tests src/tests.cpp)
 
-set_target_properties(10-bulkmt tests PROPERTIES
+add_library(async SHARED lib/async.cpp lib/async.h ${SOURCES} ${HEADERS})
+add_executable(async_cli src/client.cpp)
+
+target_link_libraries(async_cli async)
+
+set_target_properties(bulkmt tests async async_cli PROPERTIES
     CXX_STANDARD 17
     CXX_STANDARD_REQUIRED ON
     CXX_EXTENSIONS OFF
 )
 
 # add version.h
-target_include_directories(10-bulkmt PRIVATE "${CMAKE_BINARY_DIR}" src/include)
-target_link_libraries(10-bulkmt PRIVATE Boost::program_options pthread stdc++fs)
+target_include_directories(bulkmt PRIVATE "${CMAKE_BINARY_DIR}" src/include)
+target_link_libraries(bulkmt PRIVATE Boost::program_options pthread stdc++fs async)
 
-target_include_directories(tests PRIVATE ${GTest_INCLUDE_DIR} src/include)
-target_link_libraries(tests PRIVATE gtest pthread stdc++fs)
+target_include_directories(async PRIVATE "${CMAKE_BINARY_DIR}" src/include)
+target_link_libraries(async PRIVATE pthread stdc++fs)
+
+target_include_directories(tests PRIVATE ${GTest_INCLUDE_DIR} src/include lib)
+target_link_libraries(tests PRIVATE gtest pthread stdc++fs async)
+
+target_include_directories(async_cli PRIVATE "${CMAKE_BINARY_DIR}" lib)
 
 if(MSVC)
-    target_compile_options(10-bulkmt PRIVATE
+    target_compile_options(bulkmt PRIVATE
         /W4
     )
     target_compile_options(tests PRIVATE
+        /W4
+    )
+    target_compile_options(async PRIVATE
+        /W4
+    )
+    target_compile_options(async_cli PRIVATE
         /W4
     )
 else()
-    target_compile_options(10-bulkmt PRIVATE
+    target_compile_options(bulkmt PRIVATE
         -Werror -Wall -Wimplicit-fallthrough -pedantic-errors
     )
     target_compile_options(tests PRIVATE
+        -Wall -Wimplicit-fallthrough -pedantic-errors
+    )
+    target_compile_options(async PRIVATE
+        -Werror -Wall -Wimplicit-fallthrough -pedantic-errors
+    )
+    target_compile_options(async_cli PRIVATE
         -Werror -Wall -Wimplicit-fallthrough -pedantic-errors
     )
 endif()
 
 
-install(TARGETS 10-bulkmt RUNTIME DESTINATION bin)
+install(TARGETS async async_cli RUNTIME DESTINATION bin)
 
 set(CPACK_GENERATOR DEB)
 

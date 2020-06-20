@@ -3,6 +3,8 @@
 #include "console_reader.h"
 #include "console_writer.h"
 
+#include "async.h"
+
 #include <gtest/gtest.h>
 
 #include <sstream>
@@ -132,6 +134,30 @@ INSTANTIATE_TEST_CASE_P
         )
     )
 );
+
+TEST(Bulk, Async)
+{
+    testing::internal::CaptureStdout();
+
+    std::size_t bulk = 5;
+    async::handle_t h = async::connect(bulk);
+    async::handle_t h2 = async::connect(bulk);
+    async::receive(h, "1", 1);
+    async::receive(h2, "1\n", 2);
+    async::receive(h, "", 0);
+    async::receive(h, "\n", 1);
+    async::receive(h, "2\n3\n4\n5\n6\n{\na\n", 14);
+    async::receive(h, "b\nc\nd\n}\n89\n", 11);
+    async::disconnect(h);
+    async::disconnect(h2);
+
+    std::string output = testing::internal::GetCapturedStdout();
+    EXPECT_EQ("bulk: 1, 2, 3, 4, 5\n"
+              "bulk: 6\n"
+              "bulk: a, b, c, d\n"
+              "bulk: 89\n"
+              "bulk: 1\n", output);
+}
 
 int main(int argc, char* argv[])
 {

@@ -14,8 +14,6 @@ DummyCommandProcessor::DummyCommandProcessor() = default;
 
 DummyCommandProcessor::~DummyCommandProcessor()
 {
-//    m_file_writer_jobs.stop();
-//    m_log_job.stop();
 }
 
 std::map<std::thread::id, DummyCommandProcessor::Stats> DummyCommandProcessor::console_stats() const

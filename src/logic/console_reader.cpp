@@ -8,7 +8,7 @@ namespace my
 {
 
 ConsoleReader::ConsoleReader(std::size_t block_size, std::istream& input)
-    : m_input(input)
+    : m_input(&input)
     , m_block_size(block_size)
 {
 }
@@ -28,7 +28,7 @@ void ConsoleReader::read()
 {
     std::string line;
     MainStats* stats = MainStats::get_instance();
-    while (std::getline(m_input, line))
+    while (std::getline(*m_input, line))
     {
         ++stats->lines_count;
         if (line == "{")
@@ -57,6 +57,11 @@ ConsoleReader::~ConsoleReader()
 {
     if (m_braces_level == 0)
         notify_end_input();
+}
+
+void ConsoleReader::set_stream(std::istream& input)
+{
+    m_input = &input;
 }
 
 void ConsoleReader::open_brace()
