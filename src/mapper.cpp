@@ -35,6 +35,7 @@ std::list<std::string> MyMapper::operator()(ISplitter::FileRange range) const
         }
         ans.emplace_back(line.substr(0, m_prefix_length));
     }
+    ans.sort();
     return ans;
 }
 

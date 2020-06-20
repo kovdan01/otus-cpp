@@ -12,6 +12,10 @@
 namespace my
 {
 
+/**
+ * @brief The Controller class
+ * Incapsulates map-reduce operations
+ */
 class Controller
 {
 public:

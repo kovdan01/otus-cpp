@@ -3,6 +3,7 @@
 #include <cassert>
 #include <future>
 #include <iterator>
+#include <vector>
 #include <list>
 
 namespace my
@@ -31,10 +32,22 @@ Controller::map(const std::vector<ISplitter::FileRange>& edges,
     }
 
     std::list<std::string> tmp;
+    bool was_exception = false;
     for (mapper_result_t& future_result : mapped)
     {
-        tmp.merge(future_result.get());
+        try
+        {
+            tmp.merge(future_result.get());
+        }
+        // need to get all the std::future instances, otherwise mapper
+        // will be destroyed and an access to destroyed object will occur
+        catch (const MyMapper::PrefixException&)
+        {
+            was_exception = true;
+        }
     }
+    if (was_exception)
+        throw MyMapper::PrefixException{};
 
     std::vector<std::string> ans(std::move_iterator(tmp.begin()), std::move_iterator(tmp.end()));
     return ans;
@@ -46,26 +59,33 @@ Controller::reduce(const std::vector<std::string>& mapped_data,
                    progschj::ThreadPool& reducer_workers)
 {
     using It = std::vector<std::string>::const_iterator;
-    auto edges = std::make_shared<std::vector<std::pair<It, It>>>(m_reducer_threads);
+    auto edges = std::vector<std::pair<It, It>>(m_reducer_threads);
 
     std::ptrdiff_t step = mapped_data.size() / m_reducer_threads;
     It prev = mapped_data.begin(), next;
     for (std::size_t i = 0; i < m_reducer_threads; ++i)
     {
         next = (mapped_data.end() - prev < step ? mapped_data.end() : prev + step);
-        while (next != mapped_data.end() && std::next(next) != mapped_data.end() && *std::next(next) == *next)
+        if (next == mapped_data.end())
+        {
+            edges[i].first = prev;
+            edges[i].second = next;
+            prev = next;
+            continue;
+        }
+        while (std::next(next) != mapped_data.end() && *std::next(next) == *next)
             ++next;
-        (*edges)[i].first = prev;
-        (*edges)[i].second = next;
-        prev = next;
+        edges[i].first = prev;
+        edges[i].second = std::next(next);
+        prev = std::next(next);
     }
 
     std::vector<std::future<bool>> reduced(m_reducer_threads);
     for (std::size_t i = 0; i < m_reducer_threads; ++i)
     {
-        auto reducer_job = [reducer, i, edges]() -> bool
+        auto reducer_job = [reducer, i, &edges]() -> bool
         {
-            return reducer((*edges)[i].first, (*edges)[i].second);
+            return reducer(edges[i].first, edges[i].second);
         };
         reduced[i] = reducer_workers.enqueue(reducer_job);
     }
@@ -73,7 +93,8 @@ Controller::reduce(const std::vector<std::string>& mapped_data,
     bool answer = true;
     for (std::future<bool>& future_result : reduced)
     {
-        // cannot return immidiately, need to get() all the futures because they use reference to mapped_data
+        // cannot return immidiately, need to get() all the futures
+        // because they use references to edges and mapped_data
         if (!future_result.get())
             answer = false;
     }
@@ -95,8 +116,10 @@ std::size_t Controller::work(const std::string& filename)
 
         for (;; ++prefix_length)
         {
-            MyMapper mapper(filename, prefix_length);
-            mapped_data = map(edges, mapper, mapper_workers);
+            {
+                MyMapper mapper(filename, prefix_length);
+                mapped_data = map(edges, mapper, mapper_workers);
+            }
             if (reduce(mapped_data, &reducer, reducer_workers))
                 break;
         }

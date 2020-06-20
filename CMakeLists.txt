@@ -9,6 +9,7 @@ endif()
 
 configure_file(version.h.in version.h)
 find_package(GTest REQUIRED)
+find_package(Boost COMPONENTS COMPONENTS program_options REQUIRED)
 
 set(HEADERS
     src/thread_pool.h
@@ -27,6 +28,8 @@ set(SOURCES
 add_executable(14-yamr src/main.cpp ${SOURCES} ${HEADERS})
 add_executable(tests src/tests.cpp ${SOURCES} ${HEADERS})
 
+file(COPY data DESTINATION "${CMAKE_BINARY_DIR}")
+
 set_target_properties(14-yamr tests PROPERTIES
     CXX_STANDARD 17
     CXX_STANDARD_REQUIRED ON
@@ -35,7 +38,7 @@ set_target_properties(14-yamr tests PROPERTIES
 
 # add version.h
 target_include_directories(14-yamr PRIVATE "${CMAKE_BINARY_DIR}")
-target_link_libraries(14-yamr PRIVATE pthread)
+target_link_libraries(14-yamr PRIVATE pthread Boost::program_options)
 
 target_include_directories(tests PRIVATE ${GTest_INCLUDE_DIR})
 target_link_libraries(tests PRIVATE gtest pthread)

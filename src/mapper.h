@@ -3,16 +3,17 @@
 
 #include "splitter.h"
 
-#include <fstream>
-#include <functional>
 #include <string>
-#include <vector>
 #include <list>
 #include <stdexcept>
 
 namespace my
 {
 
+/**
+ * @brief The IMapper interface
+ * Interface to preprocess data (map step) from a given file
+ */
 template <typename ReturnType>
 class IMapper
 {
@@ -22,11 +23,16 @@ public:
     {
     }
 
+    /**
+     * @brief operator () Perform map (data preprocessing) operation
+     * @param range Range to file positions to take data from
+     * @return Preprocessed data
+     */
     virtual std::list<ReturnType> operator()(ISplitter::FileRange range) const = 0;
     virtual ~IMapper() = default;
 
 protected:
-    const std::string& filename() const
+    [[nodiscard]] const std::string& filename() const
     {
         return m_filename;
     }
@@ -35,9 +41,18 @@ private:
     std::string m_filename;
 };
 
+/**
+ * @brief The MyMapper class
+ * Takes a prefix from each string
+ */
 class MyMapper : public IMapper<std::string>
 {
 public:
+    /**
+     * @brief The PrefixException struct
+     * Throwed when prefix_length is greater then length of one
+     * of the strings while performing map operation
+     */
     struct PrefixException : public std::exception
     {
     };
@@ -52,9 +67,6 @@ private:
     std::ifstream m_file;
     std::size_t m_prefix_length;
 };
-
-//using mapper_t = std::function<std::list<std::string> (const std::string& filename, std::ifstream::pos_type from, std::ifstream::pos_type to, std::size_t prefix_size)>;
-//std::list<std::string> mapper(const std::string& filename, std::ifstream::pos_type from, std::ifstream::pos_type to, std::size_t prefix_size);
 
 } // namespace my
 
