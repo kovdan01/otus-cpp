@@ -5,17 +5,18 @@
 namespace my
 {
 
-splitter_return_t splitter(const std::string& filename, std::size_t count)
+std::vector<MySplitter::FileRange> MySplitter::split(std::size_t count) const
 {
-    std::ifstream::pos_type size = std::ifstream(filename, std::ios::in | std::ios::ate).tellg();
+    std::ifstream::pos_type size = std::ifstream(filename(), std::ios::in | std::ios::ate).tellg();
     if (size == std::ifstream::pos_type(-1))
         throw std::runtime_error("Problem while opening file");
 
     std::ptrdiff_t step = size / count;
-    splitter_return_t ans(count);
+    std::vector<MySplitter::FileRange> ans(count);
     std::ifstream::pos_type prev = 0, next;
 
-    std::ifstream file(filename);
+    std::ifstream file(filename());
+
     for (std::size_t i = 0; i < count; ++i)
     {
         next = (size - prev < step ? size : prev + step);

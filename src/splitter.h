@@ -9,9 +9,33 @@
 namespace my
 {
 
-using splitter_return_t = std::vector<std::pair<std::ifstream::pos_type, std::ifstream::pos_type>>;
-using splitter_t = std::function<splitter_return_t (const std::string& filename, std::size_t count)>;
-splitter_return_t splitter (const std::string& filename, std::size_t count);
+class ISplitter
+{
+public:
+    ISplitter(std::string filename)
+        : m_filename(std::move(filename))
+    {
+    }
+
+    using FileRange = std::pair<std::ifstream::pos_type, std::ifstream::pos_type>;
+    virtual std::vector<FileRange> split(std::size_t count) const = 0;
+
+protected:
+    const std::string& filename() const
+    {
+        return m_filename;
+    }
+
+private:
+    std::string m_filename;
+};
+
+class MySplitter : public ISplitter
+{
+public:
+    using ISplitter::ISplitter;
+    std::vector<FileRange> split(std::size_t count) const override;
+};
 
 } // namespace my
 

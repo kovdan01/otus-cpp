@@ -3,7 +3,7 @@
 namespace my
 {
 
-bool reducer(std::vector<std::string>::const_iterator begin, std::vector<std::string>::const_iterator end)
+bool reducer(reducer_iterator begin, reducer_iterator end)
 {
     if (begin == end)
         return true;

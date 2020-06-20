@@ -10,7 +10,7 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    my::Controller controller(my::splitter, my::mapper, 5, my::reducer, 3);
+    my::Controller controller(5, 3);
     std::size_t ans = controller.work(argv[1]);
     if (ans == std::size_t(-1))
         std::cout << "Cannot detect minimum prefix" << std::endl;
