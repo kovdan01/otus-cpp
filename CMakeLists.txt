@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 3.2)
 
 
 if(DEFINED ENV{TRAVIS_BUILD_NUMBER})
-    project(11-async VERSION 0.0.$ENV{TRAVIS_BUILD_NUMBER})
+    project(12-bulk_server VERSION 0.0.$ENV{TRAVIS_BUILD_NUMBER})
 else()
-    project(11-async VERSION 0.0.1)
+    project(12-bulk_server VERSION 0.0.1)
 endif()
 
 configure_file(version.h.in version.h)
@@ -24,9 +24,12 @@ set(HEADERS ${INTERFACES}
     src/include/command_storage.h
     src/include/console_reader.h
     src/include/console_writer.h
+    src/include/network_server.h
+    src/include/network_session.h
     src/include/file_writer.h
     src/include/thread_pool.h
-    src/include/stats.h)
+    src/include/stats.h
+    src/include/controller.h)
 
 set(SOURCES
     src/logic/command.cpp
@@ -35,10 +38,13 @@ set(SOURCES
     src/logic/command_storage.cpp
     src/logic/console_reader.cpp
     src/logic/console_writer.cpp
+    src/logic/network_server.cpp
+    src/logic/network_session.cpp
     src/logic/file_writer.cpp
+    src/logic/controller.cpp
     src/thread/thread_pool.cpp)
 
-add_executable(bulkmt src/main.cpp)
+add_executable(bulk_server src/main.cpp)
 add_executable(tests src/tests.cpp)
 
 add_library(async SHARED lib/async.cpp lib/async.h ${SOURCES} ${HEADERS})
@@ -46,18 +52,18 @@ add_executable(async_cli src/client.cpp)
 
 target_link_libraries(async_cli async)
 
-set_target_properties(bulkmt tests async async_cli PROPERTIES
+set_target_properties(bulk_server tests async async_cli PROPERTIES
     CXX_STANDARD 17
     CXX_STANDARD_REQUIRED ON
     CXX_EXTENSIONS OFF
 )
 
 # add version.h
-target_include_directories(bulkmt PRIVATE "${CMAKE_BINARY_DIR}" src/include)
-target_link_libraries(bulkmt PRIVATE Boost::program_options pthread stdc++fs async)
-
-target_include_directories(async PRIVATE "${CMAKE_BINARY_DIR}" src/include)
+target_include_directories(async PRIVATE "${CMAKE_BINARY_DIR}" src/include lib/)
 target_link_libraries(async PRIVATE pthread stdc++fs)
+
+target_include_directories(bulk_server PRIVATE "${CMAKE_BINARY_DIR}" "src/include" "lib")
+target_link_libraries(bulk_server PRIVATE Boost::program_options pthread stdc++fs async)
 
 target_include_directories(tests PRIVATE ${GTest_INCLUDE_DIR} src/include lib)
 target_link_libraries(tests PRIVATE gtest pthread stdc++fs async)
@@ -65,7 +71,7 @@ target_link_libraries(tests PRIVATE gtest pthread stdc++fs async)
 target_include_directories(async_cli PRIVATE "${CMAKE_BINARY_DIR}" lib)
 
 if(MSVC)
-    target_compile_options(bulkmt PRIVATE
+    target_compile_options(bulk_server PRIVATE
         /W4
     )
     target_compile_options(tests PRIVATE
@@ -78,7 +84,7 @@ if(MSVC)
         /W4
     )
 else()
-    target_compile_options(bulkmt PRIVATE
+    target_compile_options(bulk_server PRIVATE
         -Werror -Wall -Wimplicit-fallthrough -pedantic-errors
     )
     target_compile_options(tests PRIVATE

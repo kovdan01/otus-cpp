@@ -4,10 +4,8 @@
 #include "console_writer.h"
 #include "file_writer.h"
 #include "stats.h"
-#include "network_server.h"
 
 #include <boost/program_options.hpp>
-#include <boost/asio.hpp>
 
 #include <iostream>
 #include <stdexcept>
@@ -15,8 +13,7 @@
 
 struct Context
 {
-    short port;
-    std::size_t bulk_size;
+    std::size_t block_size;
 };
 
 struct Help : public std::exception
@@ -33,11 +30,9 @@ Context parse_command_options(int argc, char* argv[])
     po::options_description opt_desc("Allowed options");
     opt_desc.add_options()
         ("help",                                       "Print this message")
-        ("port", po::value<short>()->required(),       "Server port")
         ("size", po::value<std::size_t>()->required(), "Command block size (integer, minimum 1)")
     ;
     po::positional_options_description pos_opt_desc;
-    pos_opt_desc.add("port", 1);
     pos_opt_desc.add("size", 1);
 
     po::variables_map var_map;
@@ -68,17 +63,11 @@ Context parse_command_options(int argc, char* argv[])
         std::cerr << "Block size must be at least 1\n";
         throw Error{};
     }
-    short port = var_map["port"].as<short>();
 
-    return Context{port, block_size};
+    return Context{block_size};
 }
 
-void signal_handler(const boost::system::error_code& /*err*/, int /*signal*/)
-{
-    exit(0);
-}
-
-int main(int argc, char* argv[]) try
+int main(int argc, char* argv[])
 {
     std::ios::sync_with_stdio(false);
 
@@ -96,17 +85,30 @@ int main(int argc, char* argv[]) try
         return 1;
     }
 
-    boost::asio::io_context io_context;
+    {
+        my::ConsoleWriter console_writer;
+        my::FileWriter file_writer = {"bulk", ".log"};
+        my::DummyCommandProcessor bulk_command_processor;
+        my::CommandStorage command_storage;
+        my::ConsoleReader console_reader(context.block_size);
 
-    boost::asio::signal_set sig(io_context, SIGINT, SIGTERM);
-    sig.async_wait(signal_handler);
+        bulk_command_processor.add_writer(&console_writer);
+        bulk_command_processor.add_writer(&file_writer);
+        command_storage.add_processor(&bulk_command_processor);
+        console_reader.add_storage(&command_storage);
 
-    my::Server server(io_context, context.port, context.bulk_size);
+        console_reader.read();
+    }
 
-    io_context.run();
-}
-catch (const std::exception& e)
-{
-    std::cerr << e.what() << '\n';
-    return 1;
+    my::MainStats* main_stats = my::MainStats::get_instance();
+    std::cerr << "Main thread: "
+              << main_stats->lines_count    << " lines, "
+              << main_stats->commands_count << " commands, "
+              << main_stats->blocks_count   << " blocks" << std::endl;
+
+    auto supplementary_stats = my::LogStats::get_instance()->stats;
+    for (const auto& [id, elem] : supplementary_stats)
+        std::cerr << "Thread " << id << ": "
+                  << elem.commands_count << " commands, "
+                  << elem.blocks_count << " blocks" << std::endl;
 }
