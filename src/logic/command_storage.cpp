@@ -27,7 +27,7 @@ void CommandStorage::new_input(const std::string& input)
     if (m_commands->empty())
     {
         using namespace std::chrono;
-        m_first_command_time = duration_cast<nanoseconds>(high_resolution_clock::now().time_since_epoch()).count();
+        m_first_command_time = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count();
     }
     m_commands->emplace_back(input);
 }

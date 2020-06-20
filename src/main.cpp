@@ -3,11 +3,13 @@
 #include "console_reader.h"
 #include "console_writer.h"
 #include "file_writer.h"
+#include "stats.h"
 
 #include <boost/program_options.hpp>
 
 #include <iostream>
 #include <stdexcept>
+#include <chrono>
 
 struct Context
 {
@@ -83,16 +85,30 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    my::ConsoleWriter console_writer;
-    my::FileWriter file_writer("bulk", ".log");
-    my::DummyCommandProcessor bulk_command_processor;
-    my::CommandStorage command_storage;
-    my::ConsoleReader console_reader(context.block_size);
+    {
+        my::ConsoleWriter console_writer;
+        my::FileWriter file_writer = {"bulk", ".log"};
+        my::DummyCommandProcessor bulk_command_processor;
+        my::CommandStorage command_storage;
+        my::ConsoleReader console_reader(context.block_size);
 
-    bulk_command_processor.add_writer(&console_writer);
-    bulk_command_processor.add_writer(&file_writer);
-    command_storage.add_processor(&bulk_command_processor);
-    console_reader.add_storage(&command_storage);
+        bulk_command_processor.add_writer(&console_writer);
+        bulk_command_processor.add_writer(&file_writer);
+        command_storage.add_processor(&bulk_command_processor);
+        console_reader.add_storage(&command_storage);
 
-    console_reader.read();
+        console_reader.read();
+    }
+
+    my::MainStats* main_stats = my::MainStats::get_instance();
+    std::cerr << "Main thread: "
+              << main_stats->lines_count    << " lines, "
+              << main_stats->commands_count << " commands, "
+              << main_stats->blocks_count   << " blocks" << std::endl;
+
+    auto supplementary_stats = my::LogStats::get_instance()->stats;
+    for (const auto& [id, elem] : supplementary_stats)
+        std::cerr << "Thread " << id << ": "
+                  << elem.commands_count << " commands, "
+                  << elem.blocks_count << " blocks" << std::endl;
 }

@@ -1,4 +1,5 @@
 #include "console_reader.h"
+#include "stats.h"
 
 #include <cassert>
 #include <iostream>
@@ -26,8 +27,10 @@ void ConsoleReader::remove_storage(IStorage* storage)
 void ConsoleReader::read()
 {
     std::string line;
+    MainStats* stats = MainStats::get_instance();
     while (std::getline(m_input, line))
     {
+        ++stats->lines_count;
         if (line == "{")
         {
             open_brace();
@@ -38,6 +41,7 @@ void ConsoleReader::read()
         }
         else
         {
+            ++stats->commands_count;
             ++m_lines_accumulated;
             notify_new_line(line);
             if (m_lines_accumulated == m_block_size && m_braces_level == 0)

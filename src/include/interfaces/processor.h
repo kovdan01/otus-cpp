@@ -21,13 +21,13 @@ public:
      * @brief Add logger
      * @param writer[in] Pointer to logger to be added
      */
-    virtual void add_writer(IWriter* writer) = 0;
+    virtual void add_writer(const IWriter* writer) = 0;
 
     /**
      * @brief Remove logger
      * @param writer[in] Pointer to logger to be removed
      */
-    virtual void remove_writer(IWriter* writer) = 0;
+    virtual void remove_writer(const IWriter* writer) = 0;
 
     /**
      * @brief Process strings vector
