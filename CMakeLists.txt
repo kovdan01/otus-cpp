@@ -35,6 +35,7 @@ set_target_properties(14-yamr tests PROPERTIES
 
 # add version.h
 target_include_directories(14-yamr PRIVATE "${CMAKE_BINARY_DIR}")
+target_link_libraries(14-yamr PRIVATE pthread)
 
 target_include_directories(tests PRIVATE ${GTest_INCLUDE_DIR})
 target_link_libraries(tests PRIVATE gtest pthread)

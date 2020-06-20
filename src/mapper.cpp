@@ -20,7 +20,7 @@ std::string read_from_file(const std::string& filename, std::ifstream::pos_type 
 
 } // namespace
 
-std::pair<std::list<std::string>, bool> mapper(const std::string& filename, std::ifstream::pos_type from, std::ifstream::pos_type to, std::size_t prefix_size)
+std::list<std::string> mapper(const std::string& filename, std::ifstream::pos_type from, std::ifstream::pos_type to, std::size_t prefix_size)
 {
     std::string all = read_from_file(filename, from, to);
     std::string line;
@@ -31,11 +31,11 @@ std::pair<std::list<std::string>, bool> mapper(const std::string& filename, std:
         //ans.emplace_back(line);
         if (prefix_size > line.size())
         {
-            return {{}, false};
+            throw PrefixException{};
         }
         ans.emplace_back(line.substr(0, prefix_size));
     }
-    return {std::move(ans), true};
+    return ans;
 }
 
 } // namespace my
