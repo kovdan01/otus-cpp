@@ -70,7 +70,7 @@ else()
     )
 endif()
 
-install(TARGETS bulk_server LIBRARY DESTINATION bin)
+install(TARGETS bulk_server DESTINATION bin)
 
 set(CPACK_GENERATOR DEB)
 
