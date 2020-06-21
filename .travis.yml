@@ -9,7 +9,6 @@ before_script:
 - sudo apt-get update -qq
 
 script:
-- dpkg -s libboost-dev | grep 'Version'
 - cmake -DCMAKE_C_COMPILER=gcc-8 -DCMAKE_CXX_COMPILER=g++-8 .
 - cmake --build .
 - cmake --build . --target package
