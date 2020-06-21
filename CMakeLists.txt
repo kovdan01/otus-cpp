@@ -27,7 +27,7 @@ set(HEADERS ${INTERFACES}
 
     src/include/network/server.h
     src/include/network/session.h
-    src/include/network/controller.h
+    src/include/network/raw_data_handler.h
 
     src/include/utils/thread_pool.h
     src/include/utils/utils.h)
@@ -44,7 +44,7 @@ set(SOURCES
 
     src/logic/network/server.cpp
     src/logic/network/session.cpp
-    src/logic/network/controller.cpp
+    src/logic/network/raw_data_handler.cpp
 
     src/utils/thread_pool.cpp
     src/utils/utils.cpp)

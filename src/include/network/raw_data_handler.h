@@ -1,5 +1,5 @@
-#ifndef CONTROLLER_H
-#define CONTROLLER_H
+#ifndef RAW_DATA_HANDLER_H
+#define RAW_DATA_HANDLER_H
 
 #include "implementation/stream_reader.h"
 #include "implementation/console_writer.h"
@@ -13,17 +13,15 @@ namespace my
  * @brief The Controller class
  * Handles queries
  */
-class Controller
+class RawDataHandler
 {
 public:
-    friend class Session;
+    RawDataHandler(std::size_t bulk);
 
-    Controller(std::size_t bulk);
-
-    Controller(const Controller&) = delete;
-    Controller& operator=(const Controller&) = delete;
-    Controller(Controller&&) = delete;
-    Controller& operator=(Controller&&) = delete;
+    RawDataHandler(const RawDataHandler&) = delete;
+    RawDataHandler& operator=(const RawDataHandler&) = delete;
+    RawDataHandler(RawDataHandler&&) = delete;
+    RawDataHandler& operator=(RawDataHandler&&) = delete;
 
     void receive(const char* data, std::size_t size);
 
@@ -34,4 +32,4 @@ private:
 
 } // namespace my
 
-#endif // CONTROLLER_H
+#endif // RAW_DATA_HANDLER_H

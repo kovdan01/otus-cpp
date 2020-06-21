@@ -1,7 +1,7 @@
 #ifndef NETWORK_SESSION_H
 #define NETWORK_SESSION_H
 
-#include "network/controller.h"
+#include "network/raw_data_handler.h"
 
 #include <boost/asio.hpp>
 
@@ -26,7 +26,7 @@ private:
     tcp::socket m_socket;
     char m_buffer[BUFFER_SIZE];
 
-    Controller m_controller;
+    RawDataHandler m_controller;
 };
 
 } // namespace my

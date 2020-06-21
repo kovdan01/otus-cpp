@@ -1,4 +1,4 @@
-#include "network/controller.h"
+#include "network/raw_data_handler.h"
 #include "implementation/global_state.h"
 #include "implementation/stream_reader.h"
 
@@ -10,13 +10,13 @@
 namespace my
 {
 
-Controller::Controller(std::size_t bulk)
+RawDataHandler::RawDataHandler(std::size_t bulk)
     : m_stream_reader(GlobalState::get_instance(bulk))
 {
     m_stream_reader.set_processor(GlobalState::get_instance(bulk)->command_processor());
 }
 
-void Controller::receive(const char* data, std::size_t size)
+void RawDataHandler::receive(const char* data, std::size_t size)
 {
     std::string str(data, size);
 
