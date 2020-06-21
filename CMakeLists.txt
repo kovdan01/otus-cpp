@@ -8,7 +8,7 @@ else()
 endif()
 
 configure_file(version.h.in version.h)
-find_package(Boost COMPONENTS COMPONENTS program_options REQUIRED)
+find_package(Boost COMPONENTS COMPONENTS program_options system REQUIRED)
 
 set(INTERFACES
     src/include/interfaces/command.h
@@ -58,7 +58,7 @@ set_target_properties(bulk_server PROPERTIES
 )
 
 target_include_directories(bulk_server PRIVATE "${CMAKE_BINARY_DIR}" "src/include")
-target_link_libraries(bulk_server PRIVATE Boost::program_options pthread stdc++fs)
+target_link_libraries(bulk_server PRIVATE Boost::program_options Boost::system pthread stdc++fs)
 
 if(MSVC)
     target_compile_options(bulk_server PRIVATE
