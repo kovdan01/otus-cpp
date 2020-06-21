@@ -8,20 +8,17 @@ else()
 endif()
 
 configure_file(version.h.in version.h)
-#find_package(GTest REQUIRED)
 find_package(Boost COMPONENTS COMPONENTS program_options REQUIRED)
 
 set(INTERFACES
     src/include/interfaces/command.h
     src/include/interfaces/processor.h
     src/include/interfaces/reader.h
-    src/include/interfaces/storage.h
     src/include/interfaces/writer.h)
 
 set(HEADERS ${INTERFACES}
     src/include/dummy_command.h
     src/include/dummy_command_processor.h
-    src/include/command_storage.h
     src/include/stream_reader.h
     src/include/console_writer.h
     src/include/network_server.h
@@ -38,7 +35,6 @@ set(SOURCES
     src/logic/command.cpp
     src/logic/dummy_command.cpp
     src/logic/dummy_command_processor.cpp
-    src/logic/command_storage.cpp
     src/logic/stream_reader.cpp
     src/logic/console_writer.cpp
     src/logic/network_server.cpp
@@ -51,12 +47,6 @@ set(SOURCES
     src/thread/thread_pool.cpp)
 
 add_executable(bulk_server src/main.cpp ${SOURCES} ${HEADERS})
-#add_executable(tests src/tests.cpp)
-
-#add_library(async SHARED lib/async.cpp lib/async.h ${SOURCES} ${HEADERS})
-#add_executable(async_cli src/client.cpp)
-
-#target_link_libraries(async_cli async)
 
 set_target_properties(bulk_server PROPERTIES
     CXX_STANDARD 17
@@ -64,44 +54,17 @@ set_target_properties(bulk_server PROPERTIES
     CXX_EXTENSIONS OFF
 )
 
-# add version.h
-#target_include_directories(async PRIVATE "${CMAKE_BINARY_DIR}" src/include lib/)
-#target_link_libraries(async PRIVATE pthread stdc++fs)
-
 target_include_directories(bulk_server PRIVATE "${CMAKE_BINARY_DIR}" "src/include")
 target_link_libraries(bulk_server PRIVATE Boost::program_options pthread stdc++fs)
-
-#target_include_directories(tests PRIVATE ${GTest_INCLUDE_DIR} src/include lib)
-#target_link_libraries(tests PRIVATE gtest pthread stdc++fs async)
-
-#target_include_directories(async_cli PRIVATE "${CMAKE_BINARY_DIR}" lib)
 
 if(MSVC)
     target_compile_options(bulk_server PRIVATE
         /W4
     )
-#    target_compile_options(tests PRIVATE
-#        /W4
-#    )
-#    target_compile_options(async PRIVATE
-#        /W4
-#    )
-#    target_compile_options(async_cli PRIVATE
-#        /W4
-#    )
 else()
     target_compile_options(bulk_server PRIVATE
         -Werror -Wall -Wimplicit-fallthrough -pedantic-errors
     )
-#    target_compile_options(tests PRIVATE
-#        -Wall -Wimplicit-fallthrough -pedantic-errors
-#    )
-#    target_compile_options(async PRIVATE
-#        -Werror -Wall -Wimplicit-fallthrough -pedantic-errors
-#    )
-#    target_compile_options(async_cli PRIVATE
-#        -Werror -Wall -Wimplicit-fallthrough -pedantic-errors
-#    )
 endif()
 
 install(TARGETS bulk_server LIBRARY DESTINATION bin)

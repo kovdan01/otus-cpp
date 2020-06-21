@@ -34,11 +34,11 @@ Context parse_command_options(int argc, char* argv[])
     opt_desc.add_options()
         ("help",                                       "Print this message")
         ("port", po::value<short>()->required(),       "Server port")
-        ("size", po::value<std::size_t>()->required(), "Command block size (integer, minimum 1)")
+        ("bulk", po::value<std::size_t>()->required(), "Command block size (integer, minimum 1)")
     ;
     po::positional_options_description pos_opt_desc;
     pos_opt_desc.add("port", 1);
-    pos_opt_desc.add("size", 1);
+    pos_opt_desc.add("bulk", 1);
 
     po::variables_map var_map;
     try
@@ -62,15 +62,15 @@ Context parse_command_options(int argc, char* argv[])
         throw Error{};
     }
 
-    std::size_t block_size = var_map["size"].as<std::size_t>();
-    if (block_size == 0)
+    std::size_t bulk = var_map["bulk"].as<std::size_t>();
+    if (bulk == 0)
     {
         std::cerr << "Block size must be at least 1\n";
         throw Error{};
     }
     short port = var_map["port"].as<short>();
 
-    return Context{port, block_size};
+    return Context{port, bulk};
 }
 
 int main(int argc, char* argv[]) try

@@ -1,6 +1,6 @@
 #include "file_writer.h"
+#include "utils.h"
 
-#include <chrono>
 #include <fstream>
 #include <filesystem>
 
@@ -28,9 +28,8 @@ void FileWriter::open_file(const std::string& base_filename, std::ofstream& file
 
 void FileWriter::write(const std::string& str) const
 {
-    std::lock_guard lock(m_mutex);
-    using namespace std::chrono;
-    std::uint64_t time = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count();
+    //std::lock_guard lock(m_mutex);
+    std::uint64_t time = utils::get_current_time();
     std::string filename = m_filename_prefix + std::to_string(time) + m_filename_suffix;
     std::ofstream file;
     open_file(filename, file);
@@ -39,7 +38,7 @@ void FileWriter::write(const std::string& str) const
 
 void FileWriter::write(const std::string& str, std::uint64_t time) const
 {
-    std::lock_guard lock(m_mutex);
+    //std::lock_guard lock(m_mutex);
     std::string filename = m_filename_prefix + std::to_string(time) + m_filename_suffix;
     std::ofstream file;
     open_file(filename, file);

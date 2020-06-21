@@ -22,12 +22,11 @@ public:
 private:
     void do_read();
 
-    static constexpr std::size_t BUFFER_SIZE = 2;
+    static constexpr std::size_t BUFFER_SIZE = 1;
     tcp::socket m_socket;
     char m_buffer[BUFFER_SIZE];
 
     Controller m_controller;
-    //std::mutex m_mutex;
 };
 
 } // namespace my

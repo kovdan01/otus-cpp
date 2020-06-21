@@ -11,7 +11,7 @@ namespace my
 {
 
 Controller::Controller(std::size_t bulk)
-    : m_console_reader(bulk)
+    : m_console_reader(GlobalState::get_instance(bulk))
 {
     m_console_reader.set_processor(GlobalState::get_instance(bulk)->command_processor());
 }

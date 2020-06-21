@@ -10,7 +10,7 @@ namespace my
 {
 
 /**
- * @brief The ControllerSingletone class
+ * @brief The Controller class
  * Handles queries
  */
 class Controller
@@ -28,11 +28,7 @@ public:
     void receive(const char* data, std::size_t size);
 
 private:
-//    static inline my::ConsoleWriter m_console_writer;
-//    static inline my::FileWriter m_file_writer = {"bulk", ".log"};
-//    static inline my::DummyCommandProcessor m_bulk_command_processor;
     my::StreamReader m_console_reader;
-
     std::string m_temp_str;
 };
 

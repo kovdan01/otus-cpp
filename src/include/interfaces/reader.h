@@ -15,18 +15,6 @@ class IReader
 {
 public:
     /**
-     * @brief Add storage to put strings that are read
-     * @param storage[in] Pointer to storage to be added
-     */
-    //virtual void add_storage(CommandStorage* storage) = 0;
-
-    /**
-     * @brief Remove storage
-     * @param storage[in] Pointer to storage to be removed
-     */
-    //virtual void remove_storage(CommandStorage* storage) = 0;
-
-    /**
      * @brief Read strings
      */
     virtual void read() = 0;

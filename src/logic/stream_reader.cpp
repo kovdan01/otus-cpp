@@ -1,6 +1,7 @@
 #include "stream_reader.h"
 #include "thread_pool.h"
 #include "utils.h"
+#include "global_state.h"
 
 #include <cassert>
 #include <iostream>
@@ -8,9 +9,10 @@
 namespace my
 {
 
-StreamReader::StreamReader(std::size_t block_size)
+StreamReader::StreamReader(GlobalState* global_state)
     : m_this_commands(std::make_shared<std::vector<std::string>>())
-    , m_block_size(block_size)
+    , m_common(global_state->common_command_buffer())
+    , m_bulk(global_state->bulk())
 {
 }
 
@@ -32,7 +34,6 @@ void StreamReader::set_processor(IProcessor* processor)
 {
     assert(processor != nullptr);
     m_processor = processor;
-    m_common = CommonCommandBuffer::get_instance(m_block_size, m_processor);
 }
 
 void StreamReader::end_input_non_blocking()
@@ -55,21 +56,18 @@ void StreamReader::end_input_non_blocking()
 
 void StreamReader::read()
 {
+    if (m_input == nullptr)
+        return;
+
     std::string line;
     while (std::getline(*m_input, line))
     {
         if (line == "{")
-        {
             open_brace();
-        }
         else if (line == "}")
-        {
             close_brace();
-        }
         else
-        {
             new_input(line);
-        }
     }
 }
 
@@ -87,6 +85,7 @@ void StreamReader::close_brace()
 {
     if (m_braces_level == 0)
         throw std::runtime_error("Too many closing braces don't match opening braces");
+
     --m_braces_level;
     if (m_braces_level == 0)
     {
