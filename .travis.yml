@@ -2,8 +2,8 @@ dist: bionic
 language: cpp
 
 before_script:
+- echo "deb http://archive.ubuntu.com/ubuntu bionic groovy focal main universe" | sudo tee -a /etc/apt/sources.list
 - sudo apt-get install g++-8 gcc-8 libboost1.71-all-dev build-essential cmake -y
-- echo "deb http://archive.ubuntu.com/ubuntu bionic main universe" | sudo tee -a /etc/apt/sources.list
 - sudo apt-get update -qq
 
 script:
