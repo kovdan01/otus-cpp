@@ -28,6 +28,7 @@ void FileWriter::open_file(const std::string& base_filename, std::ofstream& file
 
 void FileWriter::write(const std::string& str) const
 {
+    std::lock_guard lock(m_mutex);
     using namespace std::chrono;
     std::uint64_t time = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count();
     std::string filename = m_filename_prefix + std::to_string(time) + m_filename_suffix;
@@ -38,6 +39,7 @@ void FileWriter::write(const std::string& str) const
 
 void FileWriter::write(const std::string& str, std::uint64_t time) const
 {
+    std::lock_guard lock(m_mutex);
     std::string filename = m_filename_prefix + std::to_string(time) + m_filename_suffix;
     std::ofstream file;
     open_file(filename, file);

@@ -1,7 +1,7 @@
 #ifndef READER_H
 #define READER_H
 
-#include "storage.h"
+#include "command_storage.h"
 
 #include <memory>
 
@@ -18,13 +18,13 @@ public:
      * @brief Add storage to put strings that are read
      * @param storage[in] Pointer to storage to be added
      */
-    virtual void add_storage(IStorage* storage) = 0;
+    //virtual void add_storage(CommandStorage* storage) = 0;
 
     /**
      * @brief Remove storage
      * @param storage[in] Pointer to storage to be removed
      */
-    virtual void remove_storage(IStorage* storage) = 0;
+    //virtual void remove_storage(CommandStorage* storage) = 0;
 
     /**
      * @brief Read strings

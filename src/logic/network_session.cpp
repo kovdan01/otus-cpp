@@ -5,8 +5,8 @@ namespace my
 {
 
 Session::Session(std::size_t bulk, tcp::socket socket)
-    : m_bulk(bulk)
-    , m_socket(std::move(socket))
+    : m_socket(std::move(socket))
+    , m_controller(bulk)
 {
 }
 
@@ -21,22 +21,12 @@ void Session::do_read()
     m_socket.async_read_some(boost::asio::buffer(m_buffer, BUFFER_SIZE),
         [this, self](boost::system::error_code ec, std::size_t length)
         {
+        std::lock_guard lock(m_mutex);
+            //std::cout << std::string(m_buffer, length);
+            //
             if (!ec)
             {
-                ControllerSingletone::get_instance(m_bulk)->receive(m_buffer, length);
-                do_write(length);
-            }
-        });
-}
-
-void Session::do_write(std::size_t length)
-{
-    auto self(shared_from_this());
-    boost::asio::async_write(m_socket, boost::asio::buffer(m_buffer, length),
-        [this, self](boost::system::error_code ec, std::size_t /*length*/)
-        {
-            if (!ec)
-            {
+                m_controller.receive(m_buffer, length);
                 do_read();
             }
         });

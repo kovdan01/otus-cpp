@@ -3,6 +3,8 @@
 
 #include "interfaces/writer.h"
 
+#include <mutex>
+
 namespace my
 {
 
@@ -16,6 +18,9 @@ public:
     void write(const std::string& str) const override;
 
     virtual ~ConsoleWriter() = default;
+
+private:
+    mutable std::mutex m_mutex;
 };
 
 } // namespace my

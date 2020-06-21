@@ -31,12 +31,12 @@ public:
         m_bulk_command_processor.add_writer(&m_console_writer);
         m_bulk_command_processor.add_writer(&m_file_writer);
         m_command_storage.add_processor(&m_bulk_command_processor);
-        m_console_reader.add_storage(&m_command_storage);
+        //m_console_reader.add_storage(&m_command_storage);
     }
 
-    void receive(std::istream& input)
+    void receive(std::shared_ptr<std::istream> input)
     {
-        m_console_reader.set_stream(input);
+        m_console_reader.set_stream(std::move(input));
         m_console_reader.read();
     }
 
@@ -118,9 +118,9 @@ void receive(handle_t handle, const char* data, std::size_t size)
     }
 
     std::string str(data, pos + 1);
-    std::istringstream input(it->second + str);
+    std::shared_ptr<std::istream> input = std::make_shared<std::istringstream>(it->second + str);
     it->second = std::string(data + pos + 1, size - pos - 1);
-    it->first->receive(input);
+    it->first->receive(std::move(input));
 }
 
 

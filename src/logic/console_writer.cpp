@@ -7,6 +7,7 @@ namespace my
 
 void ConsoleWriter::write(const std::string& str) const
 {
+    std::lock_guard lock(m_mutex);
     std::cout << str;
     std::cout.flush();
 }

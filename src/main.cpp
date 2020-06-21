@@ -73,11 +73,6 @@ Context parse_command_options(int argc, char* argv[])
     return Context{port, block_size};
 }
 
-void signal_handler(const boost::system::error_code& /*err*/, int /*signal*/)
-{
-    exit(0);
-}
-
 int main(int argc, char* argv[]) try
 {
     std::ios::sync_with_stdio(false);
@@ -97,9 +92,6 @@ int main(int argc, char* argv[]) try
     }
 
     boost::asio::io_context io_context;
-
-    boost::asio::signal_set sig(io_context, SIGINT, SIGTERM);
-    sig.async_wait(signal_handler);
 
     my::Server server(io_context, context.port, context.bulk_size);
 

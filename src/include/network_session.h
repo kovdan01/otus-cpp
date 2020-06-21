@@ -1,9 +1,12 @@
 #ifndef NETWORK_SESSION_H
 #define NETWORK_SESSION_H
 
+#include "controller.h"
+
 #include <boost/asio.hpp>
 
 #include <memory>
+#include <mutex>
 
 namespace my
 {
@@ -18,12 +21,13 @@ public:
 
 private:
     void do_read();
-    void do_write(std::size_t length);
 
     static constexpr std::size_t BUFFER_SIZE = 2;
-    const std::size_t m_bulk;
     tcp::socket m_socket;
     char m_buffer[BUFFER_SIZE];
+
+    Controller m_controller;
+    std::mutex m_mutex;
 };
 
 } // namespace my

@@ -41,11 +41,12 @@ TEST_P(BulkTestParam, TestOutput)
         my::ConsoleWriter console_writer;
         my::DummyCommandProcessor bulk_command_processor;
         my::CommandStorage command_storage;
-        my::ConsoleReader console_reader(block_size, input);
+        my::ConsoleReader console_reader(block_size);
+        //console_reader.set_stream(std::cin);
 
         bulk_command_processor.add_writer(&console_writer);
         command_storage.add_processor(&bulk_command_processor);
-        console_reader.add_storage(&command_storage);
+        //console_reader.add_storage(&command_storage);
 
         console_reader.read();
     }

@@ -27,6 +27,7 @@ set(HEADERS ${INTERFACES}
     src/include/network_server.h
     src/include/network_session.h
     src/include/file_writer.h
+    src/include/common_command_buffer.h
     src/include/thread_pool.h
     src/include/stats.h
     src/include/controller.h)
@@ -42,6 +43,7 @@ set(SOURCES
     src/logic/network_session.cpp
     src/logic/file_writer.cpp
     src/logic/controller.cpp
+    src/logic/common_command_buffer.cpp
     src/thread/thread_pool.cpp)
 
 add_executable(bulk_server src/main.cpp)

@@ -38,6 +38,7 @@ private:
     std::string m_filename_prefix;
     std::string m_filename_suffix;
     mutable std::mutex m_filename_check_lock;
+    mutable std::mutex m_mutex;
 };
 
 } // namespace my

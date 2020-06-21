@@ -6,10 +6,9 @@
 #include "dummy_command_processor.h"
 #include "command_storage.h"
 #include "thread_pool.h"
-#include "network_session.h"
 
 #include <mutex>
-#include <set>
+#include <sstream>
 
 namespace my
 {
@@ -18,40 +17,35 @@ namespace my
  * @brief The ControllerSingletone class
  * Handles queries
  */
-class ControllerSingletone
+class Controller
 {
 public:
-    ControllerSingletone(const ControllerSingletone&) = delete;
-    ControllerSingletone& operator=(const ControllerSingletone&) = delete;
-    ControllerSingletone(ControllerSingletone&&) = delete;
-    ControllerSingletone& operator=(ControllerSingletone&&) = delete;
+    friend class Session;
 
-    static ControllerSingletone* get_instance(std::size_t bulk);
+    Controller(std::size_t bulk);
 
-    void receive(const char* data, std::size_t size, Session* session);
+    Controller(const Controller&) = delete;
+    Controller& operator=(const Controller&) = delete;
+    Controller(Controller&&) = delete;
+    Controller& operator=(Controller&&) = delete;
+
+    //static Controller* get_instance(std::size_t bulk);
+
+    void receive(const char* data, std::size_t size);
 
 private:
-    ControllerSingletone(std::size_t bulk);
+    void init(std::size_t bulk);
+    static inline my::ConsoleWriter m_console_writer;
+    static inline my::FileWriter m_file_writer = {"bulk", ".log"};
+    static inline my::DummyCommandProcessor m_bulk_command_processor;
+    //static inline my::CommandStorage m_command_storage;
+    //static std::size_t m_bulk;
+    my::ConsoleReader m_console_reader;
 
-    my::ConsoleWriter m_console_writer;
-    my::FileWriter m_file_writer = {"bulk", ".log"};
-    my::DummyCommandProcessor m_bulk_command_processor;
-    my::CommandStorage m_command_storage;
-    struct Reader
-    {
-        my::ConsoleReader reader;
-        std::shared_ptr<std::istringstream> input;
-        std::string temp_str;
-        std::mutex mutex;
-    };
-
-    std::set<Session*, Reader> m_console_readers;
-
-//    std::shared_ptr<std::istringstream> m_input;
-//    std::string m_temp_str;
+    //std::istringstream m_input;
+    std::string m_temp_str;
 
     std::mutex m_mutex;
-    //std::set<Session*, std::mutex> m_reader_mutexes;
     progschj::ThreadPool m_threads;
 };
 
