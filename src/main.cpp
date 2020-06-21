@@ -1,17 +1,10 @@
-#include "dummy_command_processor.h"
-#include "command_storage.h"
-#include "stream_reader.h"
-#include "console_writer.h"
-#include "file_writer.h"
-#include "stats.h"
-#include "network_server.h"
+#include "network/server.h"
 
 #include <boost/program_options.hpp>
 #include <boost/asio.hpp>
 
 #include <iostream>
 #include <stdexcept>
-#include <chrono>
 
 struct Context
 {

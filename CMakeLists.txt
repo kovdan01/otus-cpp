@@ -17,34 +17,37 @@ set(INTERFACES
     src/include/interfaces/writer.h)
 
 set(HEADERS ${INTERFACES}
-    src/include/dummy_command.h
-    src/include/dummy_command_processor.h
-    src/include/stream_reader.h
-    src/include/console_writer.h
-    src/include/network_server.h
-    src/include/network_session.h
-    src/include/file_writer.h
-    src/include/common_command_buffer.h
-    src/include/thread_pool.h
-    src/include/stats.h
-    src/include/utils.h
-    src/include/global_state.h
-    src/include/controller.h)
+    src/include/implementation/dummy_command.h
+    src/include/implementation/dummy_command_processor.h
+    src/include/implementation/stream_reader.h
+    src/include/implementation/console_writer.h
+    src/include/implementation/file_writer.h
+    src/include/implementation/common_command_buffer.h
+    src/include/implementation/global_state.h
+
+    src/include/network/server.h
+    src/include/network/session.h
+    src/include/network/controller.h
+
+    src/include/utils/thread_pool.h
+    src/include/utils/utils.h)
 
 set(SOURCES
-    src/logic/command.cpp
-    src/logic/dummy_command.cpp
-    src/logic/dummy_command_processor.cpp
-    src/logic/stream_reader.cpp
-    src/logic/console_writer.cpp
-    src/logic/network_server.cpp
-    src/logic/network_session.cpp
-    src/logic/file_writer.cpp
-    src/logic/controller.cpp
-    src/logic/common_command_buffer.cpp
-    src/logic/utils.cpp
-    src/logic/global_state.cpp
-    src/thread/thread_pool.cpp)
+    src/logic/implementation/command.cpp
+    src/logic/implementation/dummy_command.cpp
+    src/logic/implementation/dummy_command_processor.cpp
+    src/logic/implementation/stream_reader.cpp
+    src/logic/implementation/console_writer.cpp
+    src/logic/implementation/file_writer.cpp
+    src/logic/implementation/common_command_buffer.cpp
+    src/logic/implementation/global_state.cpp
+
+    src/logic/network/server.cpp
+    src/logic/network/session.cpp
+    src/logic/network/controller.cpp
+
+    src/utils/thread_pool.cpp
+    src/utils/utils.cpp)
 
 add_executable(bulk_server src/main.cpp ${SOURCES} ${HEADERS})
 
