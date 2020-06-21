@@ -1,6 +1,6 @@
 #include "dummy_command_processor.h"
 #include "command_storage.h"
-#include "console_reader.h"
+#include "stream_reader.h"
 #include "console_writer.h"
 #include "file_writer.h"
 #include "stats.h"

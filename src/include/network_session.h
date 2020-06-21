@@ -27,7 +27,7 @@ private:
     char m_buffer[BUFFER_SIZE];
 
     Controller m_controller;
-    std::mutex m_mutex;
+    //std::mutex m_mutex;
 };
 
 } // namespace my

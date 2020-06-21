@@ -3,6 +3,12 @@
 namespace progschj
 {
 
+ThreadPool* ThreadPool::get_instance()
+{
+    static ThreadPool pool(16);
+    return &pool;
+}
+
 // the constructor just launches some amount of workers
 ThreadPool::ThreadPool(size_t threads)
     : stop(false)

@@ -21,9 +21,6 @@ void Session::do_read()
     m_socket.async_read_some(boost::asio::buffer(m_buffer, BUFFER_SIZE),
         [this, self](boost::system::error_code ec, std::size_t length)
         {
-        std::lock_guard lock(m_mutex);
-            //std::cout << std::string(m_buffer, length);
-            //
             if (!ec)
             {
                 m_controller.receive(m_buffer, length);

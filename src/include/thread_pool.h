@@ -19,13 +19,21 @@ namespace progschj
 class ThreadPool
 {
 public:
-    ThreadPool(size_t);
+    ThreadPool(const ThreadPool&) = delete;
+    ThreadPool& operator=(const ThreadPool&) = delete;
+    ThreadPool(ThreadPool&&) = delete;
+    ThreadPool& operator=(ThreadPool&&) = delete;
+
+    static ThreadPool* get_instance();
+
     template <class F, class... Args>
     auto enqueue(F&& f, Args&&... args)
         -> std::future<typename std::result_of<F(Args...)>::type>;
-    ~ThreadPool();
 
 private:
+    ThreadPool(size_t);
+    ~ThreadPool();
+
     // need to keep track of threads so we can join them
     std::vector<std::thread> workers;
     // the task queue

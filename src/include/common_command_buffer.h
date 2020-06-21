@@ -2,7 +2,8 @@
 #define COMMON_COMMAND_BUFFER_H
 
 #include "interfaces/processor.h"
-#include "console_reader.h"
+#include "stream_reader.h"
+#include "thread_pool.h"
 
 #include <vector>
 #include <memory>
@@ -30,44 +31,32 @@ public:
 
     void add_command(const std::string& command)
     {
-        //std::cerr << "COMMAND: " << command << std::endl;
-        std::shared_ptr<std::vector<std::string>> old_commands;
-        std::uint64_t old_time;
+        m_commands->emplace_back(command);
+        if (m_commands->size() == 1)
         {
-            std::lock_guard lock(m_mutex);
-            m_commands->emplace_back(command);
-            if (m_commands->size() == 1)
-            {
-                using namespace std::chrono;
-                m_first_command_time = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count();
-            }
-            if (m_commands->size() == m_bulk)
-            {
-                old_commands = m_commands;
-                old_time = m_first_command_time;
-                //processor->process_data(m_commands, m_first_command_time);
-                m_first_command_time = 0;
-                m_commands = std::make_shared<std::vector<std::string>>();
-            }
+            using namespace std::chrono;
+            m_first_command_time = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count();
         }
-        if (old_commands != nullptr)
-            m_processor->process_data(old_commands, old_time);
+        if (m_commands->size() == m_bulk)
+        {
+            to_processor();
+        }
     }
 
     void to_processor()
     {
-        //std::cerr << "TO PROCESSOR" << std::endl;
-        std::shared_ptr<std::vector<std::string>> old_commands;
-        std::uint64_t old_time;
+        std::shared_ptr<std::vector<std::string>> old_commands = m_commands;
+        std::uint64_t old_time = m_first_command_time;
+        m_commands = std::make_shared<std::vector<std::string>>();
+        if (!old_commands->empty())
         {
-            std::lock_guard lock(m_mutex);
-            old_commands = m_commands;
-            old_time = m_first_command_time;
-            m_first_command_time = 0;
-            m_commands = std::make_shared<std::vector<std::string>>();
+            IProcessor* processor = m_processor;
+            auto job = [processor, old_commands, old_time]()
+            {
+                processor->process_data(old_commands, old_time);
+            };
+            progschj::ThreadPool::get_instance()->enqueue(job);
         }
-        if (old_commands != nullptr)
-            m_processor->process_data(old_commands, old_time);
     }
 
 private:

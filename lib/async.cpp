@@ -45,7 +45,7 @@ private:
     my::FileWriter m_file_writer = {"bulk", ".log"};
     my::DummyCommandProcessor m_bulk_command_processor;
     my::CommandStorage m_command_storage;
-    my::ConsoleReader m_console_reader;
+    my::StreamReader m_console_reader;
 };
 
 /**
