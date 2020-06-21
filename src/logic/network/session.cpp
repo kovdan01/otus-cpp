@@ -5,7 +5,7 @@
 namespace my
 {
 
-Server::Server(boost::asio::io_context& io_context, short port, std::size_t bulk)
+Server::Server(boost::asio::io_service& io_context, short port, std::size_t bulk)
     : m_acceptor(io_context, tcp::endpoint(tcp::v4(), port))
     , m_bulk(bulk)
 {

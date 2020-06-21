@@ -84,7 +84,7 @@ int main(int argc, char* argv[]) try
         return 1;
     }
 
-    boost::asio::io_context io_context;
+    boost::asio::io_service io_context;
 
     my::Server server(io_context, context.port, context.bulk_size);
 
