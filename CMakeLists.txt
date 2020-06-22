@@ -45,7 +45,7 @@ set_target_properties(join_server tests PROPERTIES
 )
 
 target_include_directories(join_server PRIVATE "${CMAKE_BINARY_DIR}" "src/include")
-target_link_libraries(join_server PRIVATE Boost::program_options  pthread stdc++fs)
+target_link_libraries(join_server PRIVATE Boost::program_options Boost::system pthread stdc++fs)
 
 target_include_directories(tests PRIVATE "${CMAKE_BINARY_DIR}" "src/include")
 target_link_libraries(tests PRIVATE gtest pthread)
