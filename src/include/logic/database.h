@@ -11,6 +11,16 @@
 namespace my
 {
 
+/**
+ * @brief The Database class
+ * A singletone representing a database of
+ * two tables A and B with the following structure:
+ * {
+ *     int id;
+ *     std::string name;
+ * }
+ * id is a primary key here
+ */
 class Database
 {
 public:
@@ -24,12 +34,35 @@ public:
 
     static Database* get_instance();
 
+    /**
+     * @brief Insert row to table
+     * @param table[in] Table to insert row into (A, B)
+     * @param id[in] Id
+     * @param data[in] Name
+     * @return Message with code OK on success, code ERROR
+     * and textual error description on failure
+     */
     Message insert(const std::string& table, Index id, Data data);
+
+    /**
+     * @brief Truncate a table
+     * @param table[in] table name to truncate (A, B)
+     * @return Message with code OK on success, code ERROR
+     * and textual error description on failure
+     */
     Message truncate(const std::string& table);
 
+    /**
+     * @brief The SymmetricDifference class
+     * Represents a symmetric difference of two tables
+     */
     class SymmetricDifference
     {
     public:
+        /**
+         * @brief size
+         * @return Number of rows in symmetric difference
+         */
         std::size_t size() const;
 
         class Iterator
@@ -63,12 +96,22 @@ public:
     private:
         friend class Database;
 
+        SymmetricDifference() = default;
+
         std::map<Index, std::pair<std::optional<Data>, std::optional<Data>>> m_data;
     };
 
+    /**
+     * @brief The Intersection class
+     * Represents an intersection of two tables
+     */
     class Intersection
     {
     public:
+        /**
+         * @brief size
+         * @return Number of rows in intersection
+         */
         std::size_t size() const;
 
         class Iterator
@@ -102,15 +145,32 @@ public:
     private:
         friend class Database;
 
+        Intersection() = default;
+
         std::map<Index, std::pair<Data, Data>> m_data;
     };
 
+    /**
+     * @brief Create symmetric difference of two tables
+     * @param table1_name[in] First table name (A, B)
+     * @param table2_name[in] Second table name (A, B)
+     * @return A pair of message and symmetric difference.
+     * Message contains code OK on success, code ERROR
+     * and textual error description on failure
+     */
     std::pair<Message, SymmetricDifference>
     symmetric_difference(const std::string& table1_name, const std::string& table2_name) const;
 
+    /**
+     * @brief Create intersection of two tables
+     * @param table1_name[in] First table name (A, B)
+     * @param table2_name[in] Second table name (A, B)
+     * @return A pair of message and intersection
+     * Message contains code OK on success, code ERROR
+     * and textual error description on failure
+     */
     std::pair<Message, Intersection>
     intersection(const std::string& table1_name, const std::string& table2_name) const;
-
 
 private:
     Database();

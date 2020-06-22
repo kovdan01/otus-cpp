@@ -18,6 +18,10 @@ Database* Database::get_instance()
     return &instance;
 }
 
+// ---------------------------------------------------------------------------
+//                                   INSERT
+// ---------------------------------------------------------------------------
+
 Message Database::insert(const std::string& table_name, Index id, Data data)
 {
     std::lock_guard m_lock(m_mutex);
@@ -40,6 +44,10 @@ Message Database::insert(const std::string& table_name, Index id, Data data)
     }
 }
 
+// ---------------------------------------------------------------------------
+//                                 TRUNCATE
+// ---------------------------------------------------------------------------
+
 Message Database::truncate(const std::string& table)
 {
     std::lock_guard m_lock(m_mutex);
@@ -57,6 +65,10 @@ Message Database::truncate(const std::string& table)
         return Message{Message::Code::ERROR, "Unknown error"};
     }
 }
+
+// ---------------------------------------------------------------------------
+//                            SYMMETRIC DIFFERENCE
+// ---------------------------------------------------------------------------
 
 std::pair<Message, Database::SymmetricDifference>
 Database::symmetric_difference(const std::string& table1_name, const std::string& table2_name) const
@@ -133,6 +145,10 @@ Database::SymmetricDifference::Iterator& Database::SymmetricDifference::Iterator
     ++m_iterator;
     return *this;
 }
+
+// ---------------------------------------------------------------------------
+//                                 INTERSECTION
+// ---------------------------------------------------------------------------
 
 std::pair<Message, Database::Intersection>
 Database::intersection(const std::string& table1_name, const std::string& table2_name) const
