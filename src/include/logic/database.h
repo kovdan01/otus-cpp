@@ -63,7 +63,7 @@ public:
          * @brief size
          * @return Number of rows in symmetric difference
          */
-        std::size_t size() const;
+        [[nodiscard]] std::size_t size() const;
 
         class Iterator
         {
@@ -90,8 +90,8 @@ public:
             map_it m_iterator;
         };
 
-        Iterator begin() const;
-        Iterator end() const;
+        [[nodiscard]] Iterator begin() const;
+        [[nodiscard]] Iterator end() const;
 
     private:
         friend class Database;
@@ -112,7 +112,7 @@ public:
          * @brief size
          * @return Number of rows in intersection
          */
-        std::size_t size() const;
+        [[nodiscard]] std::size_t size() const;
 
         class Iterator
         {
@@ -139,8 +139,8 @@ public:
             map_it m_iterator;
         };
 
-        Iterator begin() const;
-        Iterator end() const;
+        [[nodiscard]] Iterator begin() const;
+        [[nodiscard]] Iterator end() const;
 
     private:
         friend class Database;

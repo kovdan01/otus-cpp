@@ -24,8 +24,8 @@ public:
     Message(Message&&) = default;
     Message& operator=(Message&&) = default;
 
-    Code code() const;
-    const std::string& text() const;
+    [[nodiscard]] Code code() const;
+    [[nodiscard]] const std::string& text() const;
 
 private:
     Code m_code;
