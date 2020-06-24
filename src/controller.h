@@ -21,6 +21,12 @@ class Controller
 public:
     Controller(std::size_t mapper_threads, std::size_t reducer_threads);
 
+    /**
+     * @brief work Does the job desctribed in task
+     * @param filename[in] Filename to inspect
+     * @return Minimum different prefix length for strings
+     * int the file, std::size_t(-1) if there is no such length
+     */
     std::size_t work(const std::string& filename);
 
 private:
