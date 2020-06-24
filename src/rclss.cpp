@@ -17,6 +17,16 @@ using kernel_type = dlib::radial_basis_kernel<sample_type>;
 // label to element indexes
 using clusters_type = std::map<std::size_t, std::vector<std::size_t>>;
 
+/**
+ * @brief Gets vector of elements from the same cluster as the
+ * given element and sorts this vector according to distance
+ * @param apartment[in] The element to search close elements for
+ * @param samples[in] Elements used to train the clustering model
+ * @param model[in] Clustering model
+ * @param clusters[in] Clusters in format: cluster label -> vector of indexes
+ * @return Vector of indexes corresponding to the apartments
+ * from the same cluster that are sorted by distance
+ */
 std::vector<std::size_t> get_close_elements(const my::Apartment& apartment,
                                             const std::vector<my::Apartment>& samples,
                                             const dlib::kkmeans<kernel_type>& model,
@@ -62,7 +72,7 @@ int main(int argc, char* argv[]) try
     }
     assert(apartments.size() == cluster_labels.size());
 
-    clusters_type clusters;
+    clusters_type clusters; ///< Map from cluster label to vector of indexes of elements in this cluster
     for (std::size_t i = 0; i < apartments.size(); ++i)
         clusters[cluster_labels[i]].emplace_back(i);
 
