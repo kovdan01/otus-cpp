@@ -6,6 +6,11 @@
 namespace my
 {
 
+/**
+ * @brief The Message class
+ * Contains message code (OK, ERROR) and message text
+ * Used to transport data between different entities
+ */
 class Message
 {
 public:
