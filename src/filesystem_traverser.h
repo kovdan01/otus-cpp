@@ -7,6 +7,10 @@
 namespace my
 {
 
+/**
+ * @brief The IFilesystemTraverser interface
+ * Describes an object that can return files list
+ */
 class IFilesystemTraverser
 {
 public:

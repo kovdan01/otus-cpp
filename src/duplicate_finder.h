@@ -18,12 +18,21 @@
 namespace my
 {
 
+/**
+ * @brief The DuplicateFinder class
+ * A class implementing duplicate finding logics
+ * @tparam Hash function used to compare files
+ */
 template <typename Hash>
 class DuplicateFinder
 {
 public:
     using Path = std::filesystem::path;
 
+    /**
+     * @brief DuplicateFinder constructor
+     * @param block_size[in] Block size (in bytes) used to compare files
+     */
     DuplicateFinder(std::size_t block_size);
 
     DuplicateFinder() = delete;
@@ -32,8 +41,16 @@ public:
     DuplicateFinder(DuplicateFinder&&) = delete;
     DuplicateFinder& operator=(DuplicateFinder&&) = delete;
 
+    /**
+     * @brief Add filesystem traverser to search files for comparison
+     * @param filesystem_traverser[in] Pointer to filesystem traverser
+     */
     void add_filesystem_traverser(const IFilesystemTraverser* filesystem_traverser);
-    void update_file_list();
+
+    /**
+     * @brief Find duplicates in files from traversers' search
+     * @return Vector of vector of path: each sub-vector contains duplicates paths
+     */
     std::vector<std::vector<Path>> get_duplicates();
 
 private:

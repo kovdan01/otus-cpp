@@ -6,6 +6,10 @@
 namespace my
 {
 
+/**
+ * @brief The FilesystemPathHash class
+ * A functor class implementing hash function for `std::filesystem::path`
+ */
 class FilesystemPathHash
 {
 public:
