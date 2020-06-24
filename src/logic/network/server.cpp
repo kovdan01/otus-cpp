@@ -1,31 +1,27 @@
+#include "network/server.h"
 #include "network/session.h"
-#include "network/raw_data_handler.h"
 
 namespace my
 {
 
-Session::Session(std::size_t bulk, tcp::socket socket)
-    : m_socket(std::move(socket))
-    , m_controller(bulk)
+Server::Server(boost::asio::io_service& io_context, short port, std::size_t bulk)
+    : m_acceptor(io_context, tcp::endpoint(tcp::v4(), port))
+    , m_bulk(bulk)
 {
+    do_accept();
 }
 
-void Session::start()
+void Server::do_accept()
 {
-    do_read();
-}
-
-void Session::do_read()
-{
-    auto self(shared_from_this());
-    m_socket.async_read_some(boost::asio::buffer(m_buffer, BUFFER_SIZE),
-        [this, self](boost::system::error_code ec, std::size_t length)
+    m_acceptor.async_accept(
+        [this](boost::system::error_code ec, tcp::socket socket)
         {
             if (!ec)
             {
-                m_controller.receive(m_buffer, length);
-                do_read();
+                std::make_shared<Session>(m_bulk, std::move(socket))->start();
             }
+
+            do_accept();
         });
 }
 

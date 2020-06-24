@@ -12,11 +12,12 @@ namespace my
 StreamReader::StreamReader(GlobalState* global_state)
     : m_this_commands(std::make_shared<std::vector<std::string>>())
     , m_common(global_state->common_command_buffer())
+    , m_processor(global_state->command_processor())
     , m_bulk(global_state->bulk())
 {
 }
 
-void StreamReader::add_command_to_block(const std::string& input)
+void StreamReader::add_command(const std::string& input)
 {
     if (m_braces_level == 0)
     {
@@ -30,17 +31,10 @@ void StreamReader::add_command_to_block(const std::string& input)
     }
 }
 
-void StreamReader::set_processor(IProcessor* processor)
-{
-    assert(processor != nullptr);
-    m_processor = processor;
-}
-
 void StreamReader::end_input_non_blocking()
 {
 
 }
-
 
 void StreamReader::read()
 {
@@ -55,7 +49,7 @@ void StreamReader::read()
         else if (line == "}")
             close_brace();
         else
-            add_command_to_block(line);
+            add_command(line);
     }
 }
 

@@ -10,8 +10,9 @@ namespace my
 {
 
 /**
- * @brief The Controller class
- * Handles queries
+ * @brief The RawDataHandler class
+ * Processes data received from network.
+ * If some data can be processed, passes it to StreamReader
  */
 class RawDataHandler
 {
@@ -23,6 +24,11 @@ public:
     RawDataHandler(RawDataHandler&&) = delete;
     RawDataHandler& operator=(RawDataHandler&&) = delete;
 
+    /**
+     * @brief Add new portion of data from network
+     * @param data[in] Pointer to the beginning of data buffer
+     * @param size[in] Buffer size
+     */
     void receive(const char* data, std::size_t size);
 
 private:

@@ -13,7 +13,6 @@ namespace my
 RawDataHandler::RawDataHandler(std::size_t bulk)
     : m_stream_reader(GlobalState::get_instance(bulk))
 {
-    m_stream_reader.set_processor(GlobalState::get_instance(bulk)->command_processor());
 }
 
 void RawDataHandler::receive(const char* data, std::size_t size)
