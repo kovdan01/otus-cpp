@@ -1,0 +1,22 @@
+dist: bionic
+language: cpp
+
+before_script:
+- sudo apt-get install g++-8 gcc-8 build-essential cmake -y
+- sudo add-apt-repository ppa:mhier/libboost-latest -y
+- sudo apt install libboost1.68 libboost1.68-dev -y
+- echo "deb http://archive.ubuntu.com/ubuntu bionic main universe" | sudo tee -a /etc/apt/sources.list
+- sudo apt-get update -qq
+
+script:
+- cmake -DCMAKE_C_COMPILER=gcc-8 -DCMAKE_CXX_COMPILER=g++-8 .
+- cmake --build .
+- cmake --build . --target package
+
+deploy:
+- provider: script
+  skip_cleanup: true
+  script:
+  - curl -T $TRAVIS_BRANCH-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb -ukovdan01:$BINTRAY_API_KEY "https://api.bintray.com/content/kovdan01/otus-cpp/$TRAVIS_BRANCH/$TRAVIS_BUILD_NUMBER/$TRAVIS_BRANCH-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=trusty;deb_component=main;deb_architecture=amd64;publish=1"
+  on:
+    all_branches: true
