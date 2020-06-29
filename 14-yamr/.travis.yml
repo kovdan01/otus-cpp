@@ -1,0 +1,26 @@
+dist: bionic
+language: cpp
+
+before_script:
+- sudo apt-get install libboost-program-options-dev libgtest-dev build-essential cmake -y
+- echo "deb http://archive.ubuntu.com/ubuntu xenial main universe" | sudo tee -a /etc/apt/sources.list
+- sudo apt-get update -qq
+- cd /usr/src/gtest
+- sudo cmake CMakeLists.txt
+- sudo make
+- sudo cp *.a /usr/lib
+- cd -
+
+script:
+- cmake .
+- cmake --build .
+- cmake --build . --target test
+- cmake --build . --target package
+
+deploy:
+- provider: script
+  skip_cleanup: true
+  script:
+  - curl -T $TRAVIS_BRANCH-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb -ukovdan01:$BINTRAY_API_KEY "https://api.bintray.com/content/kovdan01/otus-cpp/$TRAVIS_BRANCH/$TRAVIS_BUILD_NUMBER/$TRAVIS_BRANCH-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=trusty;deb_component=main;deb_architecture=amd64;publish=1"
+  on:
+    all_branches: true
